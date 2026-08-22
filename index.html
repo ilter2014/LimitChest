@@ -38,7 +38,7 @@
 .trust-row svg { width:15px; height:15px; color:var(--amber); }
 
 .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
-  gap:1.4rem; margin-top:2.6rem; }
+  gap:1.8rem; margin-top:2.8rem; }
 .feature-card { background:var(--white); border:1px solid var(--border);
   border-radius:var(--radius-lg); padding:1.8rem; transition:.25s var(--ease-out); }
 .feature-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); border-color:rgba(244,162,97,.35); }
@@ -243,7 +243,7 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <strong>Claude Code'a bağlayın</strong>
-          <p>İki ortam değişkeni ayarlayın, gerisi hazır:</p>
+          <p>Windows'ta CMD'yi (veya PowerShell'i) açın, iki komutu girin — gerisi hazır:</p>
           <div class="terminal" style="margin-top:.9rem;">
             <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> terminal</div>
             <div id="term-install"></div>
@@ -342,8 +342,8 @@
     ],
     install: [
       { cmd: 'npm install -g @anthropic-ai/claude-code', out: ['✓ kuruldu'] },
-      { cmd: 'export ANTHROPIC_BASE_URL=https://api.limitchest.com', out: [] },
-      { cmd: 'export ANTHROPIC_AUTH_TOKEN=sk-lc-••••', out: ['✓ bağlandı — sınırsız erişim'] }
+      { cmd: 'setx ANTHROPIC_BASE_URL "https://api.limitchest.com"', out: [] },
+      { cmd: 'setx ANTHROPIC_AUTH_TOKEN "sk-lc-••••"', out: ['✓ bağlandı — sınırsız erişim'] }
     ]
   };
 
