@@ -297,6 +297,11 @@
     runTerminal('term-demo', SCRIPTS.hero);
     runTerminal('term-install', SCRIPTS.install);
   });
+  // DOM hazır olmuşsa (script en sonda) hemen başlat
+  if (document.readyState !== 'loading') {
+    runTerminal('term-demo', SCRIPTS.hero);
+    runTerminal('term-install', SCRIPTS.install);
+  }
 })();
 </script>
 

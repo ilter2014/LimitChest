@@ -164,8 +164,10 @@ pre {
   color: var(--amber);
 }
 
-/* Reveal anim */
-[data-delay] { opacity:0; transform:translateY(18px); transition:opacity .5s ease, transform .5s ease; }
+/* Reveal anim — başlangıçta görünür, js .visible sınıfını işaretlerse animasyonlu görün.
+   IntersectionObserver viewport dışı scrolllarda veya anında renderde tetiklenmeyebilir,
+   bu yüzden varsayılan görünürlük 100%'tir. */
+[data-delay] { opacity:1; transform:none; transition:opacity .5s ease, transform .5s ease; }
 [data-delay].visible { opacity:1; transform:none; }
 
 /* Terminal penceresi */
