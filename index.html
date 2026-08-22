@@ -21,7 +21,7 @@
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar">
   <div class="nav-container container">
-    <a href="index.html" class="nav-brand">⚡ LimitChest</a>
+    <a href="index.html" class="nav-brand nav-logo"><img src="logo/logo.svg" alt="">LimitChest</a>
     <button class="nav-toggle" aria-label="Menü" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
     <div class="nav-links">
       <a href="#features">Özellikler</a>
@@ -36,7 +36,10 @@
 </nav>
 
 <!-- ===== HERO ===== -->
-<section class="hero" style="background:linear-gradient(135deg,#1A1A2E 0%,#252542 100%); color:var(--cream); padding:clamp(3.2rem,7vw,5.5rem) 0;">
+<section class="hero" style="position:relative; overflow:hidden; background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(244,162,97,.14), transparent),
+    linear-gradient(135deg,#1A1A2E 0%,#252542 55%,#2A2A45 100%);
+    color:var(--cream); padding:clamp(3.6rem,8vw,6rem) 0;">
   <div class="container">
     <div class="hero-grid" style="display:grid; grid-template-columns:1.2fr .8fr; gap:clamp(2rem,5vw,3.5rem); align-items:center;">
       <div>
@@ -44,8 +47,9 @@
         <h1 class="hero-title" data-delay="200" style="font-size:clamp(2rem,5vw,3.2rem); margin:.7rem 0 1.2rem;">
           Sınırsız Claude Code API'ye <br>Erişim — Tek Paket
         </h1>
-        <p class="hero-sub" data-delay="300" style="font-size:1.05rem; color:var(--cream-dark); max-width:580px;">
-          500 TL / ay, kota sınırı yok. Claude Code'unuzu sınırsız kullanın. <br>3 güncel ücretsiz deneme — kart gerekmez.
+        <p class="hero-sub" data-delay="300" style="font-size:1.05rem; color:#D8D2E8; max-width:580px; line-height:1.75;">
+          500 TL / ay, kota sınırı yok — Claude Code'u dilediğince kullan.<br>
+          <strong style="color:var(--amber-light);">3 gün ücretsiz deneme</strong>, kart gerekmez.
         </p>
         <div class="cta-row" data-delay="400" style="margin-top:1.8rem; display:flex; gap:1rem; flex-wrap:wrap;">
           <a href="register.html" class="btn btn-primary btn-lg">🎁 3 Günlük Ücretsiz Dene</a>

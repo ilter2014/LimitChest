@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F4A261"/>
+      <stop offset="1" stop-color="#E8914A"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#1A1A2E"/>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="none" stroke="#F4A261" stroke-width="1.5" opacity=".5"/>
+  <!-- sandık gövdesi -->
+  <rect x="16" y="26" width="32" height="20" rx="3" fill="url(#g)"/>
+  <!-- sandık kapağı -->
+  <path d="M16 28 q0-8 8-8 h16 q8 0 8 8 v2 H16 Z" fill="#FFD6A5"/>
+  <!-- kilit -->
+  <rect x="28" y="30" width="8" height="10" rx="2" fill="#1A1A2E"/>
+  <circle cx="32" cy="34" r="1.6" fill="#FFD6A5"/>
+  <rect x="31.2" y="35.5" width="1.6" height="3" rx=".8" fill="#FFD6A5"/>
+</svg>

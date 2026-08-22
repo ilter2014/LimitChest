@@ -204,13 +204,18 @@ pre {
 }
 @keyframes blink { 0%,50% { opacity:1 } 51%,100% { opacity:0 } }
 
-/* Navbar */
+/* Navbar — cam efekti, scroll'da gölge */
 .navbar {
   position:sticky; top:0; z-index:50;
-  background: var(--white);
+  background: rgba(255,248,240,.85);
   border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: box-shadow .25s ease;
 }
+.navbar.scrolled { box-shadow: var(--shadow-md); }
+.nav-logo { display:inline-flex; align-items:center; gap:.55rem; }
+.nav-logo img { width:30px; height:30px; border-radius:8px; }
 .nav-container {
   max-width:1200px; margin:0 auto;
   padding: clamp(.8rem,2vw,1.2rem) 1.5rem;

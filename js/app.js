@@ -120,6 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.nav-links a').forEach(a =>
     a.addEventListener('click', () => document.querySelector('.nav-links')?.classList.remove('open')));
 
+  // Navbar scroll gölgesi
+  const nav = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    nav?.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+
   const els = document.querySelectorAll('[data-delay]');
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(en => {
