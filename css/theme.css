@@ -343,11 +343,14 @@ pre {
 .copy-box button:hover { background:var(--amber-dark); }
 
 /* ============ MOBİL UYUMLULUK ============ */
+.nav-toggle { display: none; background:none; border:none; cursor:pointer;
+  font-size:1.4rem; color:var(--navy); line-height:1; }
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr !important; }
   .footer-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 @media (max-width: 760px) {
+  .nav-toggle { display: inline-flex; }
   .nav-links {
     position: fixed; top: 60px; left: 0; right: 0;
     background: var(--white);
@@ -359,13 +362,7 @@ pre {
     display: none;
   }
   .nav-links.open { display: flex; }
-  .nav-toggle {
-    display: inline-flex !important;
-    background: none; border: none; cursor: pointer;
-    font-size: 1.4rem; color: var(--navy); line-height: 1;
-  }
 }
-.nav-toggle { display: none; }
 
 @media (max-width: 520px) {
   .footer-grid { grid-template-columns: 1fr !important; }

@@ -34,6 +34,7 @@
 .trust-row { display:flex; gap:1.4rem; flex-wrap:wrap; margin-top:1.6rem;
   font-size:.86rem; color:#9B94B8; }
 .trust-row span { display:inline-flex; align-items:center; gap:.45rem; }
+.trust-row span + span { padding-left:1.4rem; border-left:1px solid rgba(255,255,255,.14); }
 .trust-row svg { width:15px; height:15px; color:var(--amber); }
 
 .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
@@ -191,7 +192,7 @@
     <div class="pricing-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <strong style="font-size:1.05rem;">Aylık Abonelik</strong>
-        <span class="status-pill status-active">Aktif</span>
+        <span class="badge badge-amber-solid">Önerilen</span>
       </div>
       <div class="price-line">
         <span class="price-value">₺500</span>
@@ -200,14 +201,14 @@
       <p style="color:var(--text-muted); font-size:.92rem;">Vergiler dahil. Otomatik yenileme yok.</p>
 
       <ul class="check-list">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Kotalı kullanım — sınır yok</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Sınırsız kullanım — kota yok, hız kesilmesi yok</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Tüm Claude modelleri</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Claude Code CLI tam desteği</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Türkçe destek, hızlı dönüş</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Dilediğiniz an durdurun</li>
       </ul>
 
-      <a href="register.html" class="btn btn-primary btn-lg" style="width:100%;">3 Gün Ücretsiz Dene</a>
+      <a href="register.html" class="btn btn-primary btn-lg" style="width:100%;">3 Gün Ücretsiz Başla</a>
       <p style="text-align:center; color:var(--text-muted); font-size:.82rem; margin-top:.9rem;">
         Kart istemiyoruz · Deneme biterse sadece sessizce kapanır
       </p>
@@ -289,7 +290,7 @@
     <p style="color:var(--text-muted); margin:.9rem auto 1.8rem; max-width:420px;">
       3 gün boyunca sınırları zorlayın. Beğenmezseniz kaybolur gider.
     </p>
-    <a href="register.html" class="btn btn-primary btn-lg">Ücretsiz Denemeyi Başlat</a>
+    <a href="register.html" class="btn btn-primary btn-lg">3 Gün Ücretsiz Başla</a>
   </div>
 </section>
 
