@@ -104,8 +104,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     return fields.some(f => String(f || '').toLowerCase().includes(q));
   }
   const searchBoxHTML = `
-    <input type="search" id="admin-search" class="form-field" placeholder="E-posta, ad veya durum ara…"
-           style="max-width:340px; margin-bottom:1rem;" oninput="renderAll()">`;
+    <input type="search" id="admin-search" placeholder="E-posta, ad veya durum ara…"
+           style="width:100%; max-width:340px; margin-bottom:1rem; padding:.7rem .95rem;
+                  font-family:'Inter',sans-serif; font-size:.92rem;
+                  border:1.5px solid var(--border); border-radius:var(--radius-md);
+                  background:var(--white); color:var(--text);" oninput="renderAll()">`;
 
   document.querySelector('.tabs').insertAdjacentHTML('afterend', searchBoxHTML);
 
