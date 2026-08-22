@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Giriş Yap — LimitChest | Sınırsız Claude Code</title>
+<meta name="description" content="LimitChest hesabına giriş yap. Sınırsız Claude Code erişimi, 500 TL / ay, kota yok. Panelden API anahtarını al, hemen kullan.">
+<link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
+<!-- Supabase + config + app -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase-min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js" defer></script>
+
+<style>
+/* ---- Bu sayfaya özel düzen ---- */
+.auth-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(2rem, 5vw, 3.6rem);
+  align-items: center;
+  width: 100%;
+  max-width: 1020px;
+  margin: 0 auto;
+}
+.auth-side h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin: .8rem 0 1rem; }
+.auth-side p  { color: var(--text-muted); max-width: 480px; }
+.auth-points  { list-style:none; margin-top:1.4rem; padding:0; font-size:.93rem; color:var(--text-soft); }
+.auth-points li { margin:.45rem 0; }
+
+.term-mini {
+  background: var(--navy);
+  border: 1px solid var(--navy-mid);
+  border-radius: var(--radius-md);
+  padding: .55rem .9rem;
+  color: var(--amber-light);
+  font-family:'JetBrains Mono', monospace;
+  font-size:.82rem;
+  display:flex; align-items:center; gap:.55rem;
+  overflow-x:auto; white-space:nowrap;
+}
+.term-mini .term-prompt { color: var(--amber); }
+
+.pw-wrap { position:relative; }
+.pw-wrap input { padding-right:5.2rem; }
+.pw-toggle {
+  position:absolute; right:.55rem; top:50%;
+  transform:translateY(-50%);
+  background:var(--cream-dark); color:var(--amber-dark);
+  border:none; border-radius:var(--radius-sm);
+  font-family:'JetBrains Mono', monospace; font-size:.75rem; font-weight:700;
+  padding:.35rem .6rem; cursor:pointer; transition:.18s;
+}
+.pw-toggle:hover { background:var(--amber-light); }
+
+.btn-block { width:100%; padding:.9rem 1.4rem; font-size:1rem; margin-top:.4rem; }
+.btn[disabled] { opacity:.65; cursor:not-allowed; transform:none !important; }
+
+@media (max-width: 900px) {
+  .auth-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .auth-side { text-align:center; }
+  .auth-side p { margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="nav-container container">
+    <a href="index.html" class="nav-brand">⚡ LimitChest</a>
+    <button class="nav-toggle" aria-label="Menü" aria-expanded="false" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html#features">Özellikler</a>
+      <a href="index.html#pricing">Fiyatlandırma</a>
+      <a href="index.html#install">Kurulum</a>
+      <a href="index.html#faq">Sık Sorulan</a>
+      <a href="community.html">Topluluk</a>
+      <a href="support.html">Destek</a>
+      <span id="nav-auth-area"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== AUTH ===== -->
+<main class="auth-wrap">
+  <div class="auth-grid">
+
+    <!-- Sol taraf: tanıtım + terminal -->
+    <div class="auth-side">
+      <span class="badge badge-outline">✦ Hesap Girişi</span>
+      <h1>Tekrar hoş geldin.</h1>
+      <p>Paneline gir, API anahtarını al ve Claude Code'unu sınırsız kullanmaya devam et. Kota yok — sadece LimitChest.</p>
+      <ul class="auth-points">
+        <li>✦ Sınırsız token · tüm modeller</li>
+        <li>✦ Anlık anahtar yönetimi</li>
+        <li>✦ Türkçe destek, EFT / Havale</li>
+      </ul>
+      <div class="term-mini" style="margin-top:1.6rem;">
+        <span class="term-prompt">$</span> limitchest auth --login
+        <span class="term-cursor"></span>
+      </div>
+    </div>
+
+    <!-- Sağ taraf: giriş kartı -->
+    <div class="card auth-card">
+      <div class="terminal" style="padding:.6rem .9rem; margin-bottom:1.4rem;">
+        <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> ~/limitchest — login</div>
+        <div id="term-login"></div>
+      </div>
+
+      <h1 style="font-size:1.7rem;">Giriş Yap</h1>
+      <p class="auth-sub">Hesabına giriş yapmak için e-posta ve şifreni gir.</p>
+
+      <div id="form-error" class="form-error" role="alert" style="display:none;"></div>
+
+      <form id="login-form" novalidate>
+        <div class="form-field">
+          <label for="email">E-posta</label>
+          <input type="email" id="email" name="email" autocomplete="email"
+                 placeholder="sen@ornek.com" spellcheck="false" autofocus>
+        </div>
+
+        <div class="form-field">
+          <label for="password">Şifre</label>
+          <div class="pw-wrap">
+            <input type="password" id="password" name="password"
+                   autocomplete="current-password" placeholder="••••••••">
+            <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Şifreyi göster veya gizle">[göster]</button>
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn btn-primary btn-block">🔓 Giriş Yap</button>
+      </form>
+
+      <div class="auth-alt">
+        <a href="forgot.html">Şifremi unuttum</a>
+      </div>
+      <div class="auth-alt" style="margin-top:.6rem;">
+        Hesabın yok mu? <a href="register.html">Kayıt ol</a> — 3 günlük ücretsiz deneme.
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer style="background:var(--navy); color:var(--text-muted); padding:2.8rem 0 1.6rem;">
+  <div class="container">
+    <div class="footer-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1.8rem;">
+      <div>
+        <div class="nav-brand" style="color:var(--white); display:inline;">⚡ LimitChest</div>
+        <p style="margin-top:.6rem; font-size:.88rem;">Sınırsız Claude Code erişimi. 500 TL / ay — Türkiye'ye özel.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Ürün</h4>
+        <ul style="list-style:none; font-size:.88rem;">
+          <li><a href="index.html#features" style="color:inherit;">Özellikler</a></li>
+          <li><a href="index.html#pricing" style="color:inherit;">Fiyatlar</a></li>
+          <li><a href="index.html#install" style="color:inherit;">Kurulum</a></li>
+          <li><a href="support.html" style="color:inherit;">Destek</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Topluluk</h4>
+        <ul style="list-style:none; font-size:.88rem;">
+          <li><a href="community.html" style="color:inherit;">Topluluk</a></li>
+          <li><a href="support.html" style="color:inherit;">Destek Aç</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Yasal</h4>
+        <ul style="list-style:none; font-size:.88rem;">
+          <li><a href="viewer.html?file=license.html" style="color:inherit;">Lisans</a></li>
+          <li><a href="viewer.html?file=privacy.html" style="color:inherit;">Gizlilik</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(244,162,97,.15); margin-top:1.8rem; padding-top:1.4rem; font-size:.85rem; text-align:center;">
+      © 2026 LimitChest — ❤️ ile yapıldı · Türkiye
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   Login sayfası mantığı
+   Not: app.js "defer" olduğu için tüm mantık DOMContentLoaded
+   içinde çalışır — sb / getSession o noktada hazır olur.
+   ============================================================ */
+(function () {
+  const REDIRECT = 'dashboard.html';
+
+  /* ---------- Terminal yazım animasyonu ---------- */
+  const SCRIPT = [
+    { cmd: 'limitchest login', out: ['✦ Kimlik doğrulanıyor…'] },
+    { cmd: 'limitchest status', out: ['Plan: Sınırsız · Kota: ∞ · Model: Claude Sonnet 4'] },
+    { cmd: 'claude "Merhaba"', out: ['❯ Claude: Merhaba! Hoş geldin.'] }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function runTerminal(id, script) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let si = 0, ci = 0;
+
+    function render(line) {
+      let html = '';
+      for (let k = 0; k < si; k++) {
+        html += '<div class="term-line"><span class="term-prompt">$</span> ' + esc(script[k].cmd) + '</div>';
+        script[k].out.forEach(o => {
+          html += '<div class="term-line"><span class="term-prompt">❯</span> ' + esc(o) + '</div>';
+        });
+      }
+      html += '<div class="term-line"><span class="term-prompt">$</span> ' + esc(line) + '<span class="term-cursor"></span></div>';
+      el.innerHTML = html;
+    }
+
+    function tick() {
+      if (si >= script.length) {
+        // Bitti: tüm komut + çıktılar ve yanıp sönen boş istem
+        let html = '';
+        script.forEach(step => {
+          html += '<div class="term-line"><span class="term-prompt">$</span> ' + esc(step.cmd) + '</div>';
+          step.out.forEach(o => {
+            html += '<div class="term-line"><span class="term-prompt">❯</span> ' + esc(o) + '</div>';
+          });
+        });
+        html += '<div class="term-line"><span class="term-prompt">$</span> <span class="term-cursor"></span></div>';
+        el.innerHTML = html;
+        return;
+      }
+      const cmd = script[si].cmd;
+      if (ci <= cmd.length) {
+        render(cmd.slice(0, ci++));
+        setTimeout(tick, 30 + Math.random() * 40);
+      } else {
+        render(cmd);
+        setTimeout(() => { si++; ci = 0; tick(); }, 700);
+      }
+    }
+    tick();
+  }
+
+  /* ---------- Hata mesajları (Türkçe) ---------- */
+  function trAuthError(err) {
+    const m   = String((err && err.message) || '').toLowerCase();
+    const st  = (err && (err.status || err.code)) || '';
+
+    if (m.includes('invalid login credentials')) return 'E-posta veya şifre hatalı. Tekrar dene.';
+    if (m.includes('not confirmed') || m.includes('email not confirmed'))
+      return 'E-posta adresin doğrulanmamış. Gelen kutundaki doğrulama bağlantısına tıkla.';
+    if (m.includes('rate limit') || m.includes('too many requests') || st === 429)
+      return 'Çok fazla deneme yaptın. Lütfen birkaç dakika bekleyip tekrar dene.';
+    if (m.includes('logins are disabled') || m.includes('signups not allowed'))
+      return 'Giriş şu anda kapalı. Destek ekibine yaz: ' +
+        ((typeof LIMITCHEST_CONFIG !== 'undefined' && LIMITCHEST_CONFIG.CONTACT_EMAIL) || 'destek@limitchest.com');
+    if (m.includes('fetch') || m.includes('network') || m.includes('load failed'))
+      return 'Bağlantı hatası. İnternetini kontrol edip tekrar dene.';
+    if (typeof LIMITCHEST_CONFIG === 'undefined' || !LIMITCHEST_CONFIG.SUPABASE_URL)
+      return 'Sunucu ayarları eksik (js/config.js).';
+    return 'Giriş yapılamadı' + ((err && err.message) ? ': ' + err.message : '.');
+  }
+
+  /* ---------- Form yardımcıları ---------- */
+  const alertBox = document.getElementById('form-error');
+
+  function showError(msg) {
+    alertBox.textContent = msg;
+    alertBox.style.display = 'block';
+  }
+  function hideError() {
+    alertBox.style.display = 'none';
+    alertBox.textContent = '';
+  }
+  function setLoading(on, btn, label) {
+    btn.disabled = on;
+    btn.textContent = on ? '⏳ Giriş yapılıyor…' : label;
+  }
+
+  document.addEventListener('DOMContentLoaded', async function () {
+    runTerminal('term-login', SCRIPT);
+
+    const form     = document.getElementById('login-form');
+    const emailEl  = document.getElementById('email');
+    const passEl   = document.getElementById('password');
+    const submitBtn= document.getElementById('submit-btn');
+    const SUBMIT_LABEL = submitBtn.textContent;
+
+    /* Şifre göster/gizle */
+    document.getElementById('pw-toggle').addEventListener('click', function () {
+      const show = passEl.type === 'password';
+      passEl.type = show ? 'text' : 'password';
+      this.textContent = show ? '[gizle]' : '[göster]';
+      passEl.focus();
+    });
+
+    /* Yazarken hatayı gizle */
+    [emailEl, passEl].forEach(el =>
+      el.addEventListener('input', () => { if (alertBox.style.display === 'block') hideError(); }));
+
+    /* Oturum zaten varsa direkt panele */
+    try {
+      const session = await getSession();
+      if (session && session.user) { location.replace(REDIRECT); return; }
+    } catch (e) { /* oturum kontrolü başarısız — formu göster */ }
+
+    /* Gönderim */
+    form.addEventListener('submit', async function (ev) {
+      ev.preventDefault();
+      hideError();
+
+      const email = emailEl.value.trim();
+      const password = passEl.value;
+
+      if (!email)                       { showError('E-posta adresini gir.');       emailEl.focus();  return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Geçerli bir e-posta adresi gir.'); emailEl.focus(); return; }
+      if (!password)                    { showError('Şifreni gir.');                passEl.focus();   return; }
+      if (password.length < 6)          { showError('Şifre en az 6 karakter olmalı.'); passEl.focus(); return; }
+
+      setLoading(true, submitBtn);
+
+      try {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+        if (error) { showError(trAuthError(error)); setLoading(false, submitBtn, SUBMIT_LABEL); return; }
+        if (!data || !data.session) {
+          showError('Giriş tamamlanamadı. Tekrar dene.');
+          setLoading(false, submitBtn, SUBMIT_LABEL);
+          return;
+        }
+
+        location.href = REDIRECT;
+      } catch (e) {
+        showError(trAuthError(e));
+        setLoading(false, submitBtn, SUBMIT_LABEL);
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LimitChest — Sınırsız Claude Code API | 3 Günlük Ücretsiz Deneme | Türkiye</title>
+<meta name="description" content="LimitChest ile Claude Code'unuzu sınırsız kullanan 500 TL'lik aylık aboneniz. 3 günlük ücretsiz deneme, IBAN/EFT-Havale ödeme, Türkçe destek. Hemen başlayın.">
+<meta name="keywords" content="limitchest, claude code, sınırsız token, api anahtarı, yapay zeka, ücretsiz deneme, 500 tl, abi, eft">
+<link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
+<!-- Supabase + config + app -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase-min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js" defer></script>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="nav-container container">
+    <a href="index.html" class="nav-brand">⚡ LimitChest</a>
+    <button class="nav-toggle" aria-label="Menü" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="#features">Özellikler</a>
+      <a href="#pricing">Fiyatlandırma</a>
+      <a href="#install">Kurulum</a>
+      <a href="#faq">Sık Sorulan</a>
+      <a href="community.html">Topluluk</a>
+      <a href="support.html">Destek</a>
+      <span id="nav-auth-area"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" style="background:linear-gradient(135deg,#1A1A2E 0%,#252542 100%); color:var(--cream); padding:clamp(3.2rem,7vw,5.5rem) 0;">
+  <div class="container">
+    <div class="hero-grid" style="display:grid; grid-template-columns:1.2fr .8fr; gap:clamp(2rem,5vw,3.5rem); align-items:center;">
+      <div>
+        <div class="badge badge-amber" data-delay="100">✦ v1 — Türkiye'ye Özel</div>
+        <h1 class="hero-title" data-delay="200" style="font-size:clamp(2rem,5vw,3.2rem); margin:.7rem 0 1.2rem;">
+          Sınırsız Claude Code API'ye <br>Erişim — Tek Paket
+        </h1>
+        <p class="hero-sub" data-delay="300" style="font-size:1.05rem; color:var(--cream-dark); max-width:580px;">
+          500 TL / ay, kota sınırı yok. Claude Code'unuzu sınırsız kullanın. <br>3 güncel ücretsiz deneme — kart gerekmez.
+        </p>
+        <div class="cta-row" data-delay="400" style="margin-top:1.8rem; display:flex; gap:1rem; flex-wrap:wrap;">
+          <a href="register.html" class="btn btn-primary btn-lg">🎁 3 Günlük Ücretsiz Dene</a>
+          <a href="#pricing" class="btn btn-outline">Fiyatları Gör</a>
+        </div>
+        <div class="stat-badges" data-delay="500" style="margin-top:1.6rem; display:flex; gap:1.4rem; flex-wrap:wrap;">
+          <span class="badge badge-outline">⚡ 500 TL / Ay</span>
+          <span class="badge badge-outline">🎯 Kota Yok</span>
+          <span class="badge badge-outline">💳 EFT / Havale</span>
+        </div>
+      </div>
+
+      <!-- Terminal demo -->
+      <div data-delay="300" class="terminal">
+        <div class="term-bar">
+          <span class="term-dots"><span></span><span></span><span></span></span>
+          <span>Terminal — ~/limitchest-demo</span>
+        </div>
+        <div id="term-demo"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ÖZELLİKLER ===== -->
+<section id="features" style="padding:clamp(4rem,8vw,6rem) 0;">
+  <div class="container">
+    <div class="section-head" data-delay="0">
+      <span class="badge badge-outline">Özellikler</span>
+      <h2>Neden LimitChest?</h2>
+      <p>Claude Code kullanmanın en kolay yolu. Kota yok, sadece 500 TL.</p>
+    </div>
+
+    <div class="features-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.8rem; margin-top:2.2rem;">
+      <!-- kart 1 -->
+      <div class="card" data-delay="100">
+        <div style="font-size:2rem; margin-bottom:1rem;">⚡</div>
+        <h3>Sınırsız Token</h3>
+        <p style="margin:.7rem 0 0; color:var(--text-soft);">Kota takviyesi yok — istediğin kadar uzun süre Claude Code kullan.</p>
+      </div>
+      <div class="card" data-delay="150">
+        <div style="font-size:2rem; margin-bottom:1rem;">💎</div>
+        <h3>3 Günlük Ücretsiz</h3>
+        <p style="margin:.7rem 0 0; color:var(--text-soft);">Kaydol, hiçbir şey girmeden doğrudan deneme başlat.</p>
+      </div>
+      <div class="card" data-delay="200">
+        <div style="font-size:2rem; margin-bottom:1rem;">🇹🇷</div>
+        <h3>Türkçe Destek</h3>
+        <p style="margin:.7rem 0 0; color:var(--text-soft);">Türkçe müşteri desteği — sorun ya da ödeme takibine bak.</p>
+      </div>
+      <div class="card" data-delay="250">
+        <div style="font-size:2rem; margin-bottom:1rem;">💳</div>
+        <h3>EFT / Havale</h3>
+        <p style="margin:.7rem 0 0; color:var(--text-soft);">Kart gerekmez — IBAN'ınıza fatura gelir, ödersiniz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FİYATLANDIRMA ===== -->
+<section id="pricing" style="background:var(--navy); color:var(--cream); padding:clamp(4rem,8vw,6rem) 0;">
+  <div class="container">
+    <div class="section-head" data-delay="0" style="text-align:center;">
+      <span class="badge badge-outline">Fiyatlandırma</span>
+      <h2 style="color:var(--white);">Basit ve Şeffaf</h2>
+      <p style="color:var(--amber-light);">Tek bir paket — sınırsız.</p>
+    </div>
+
+    <div class="pricing-grid" style="max-width:520px; margin:2rem auto 0;">
+      <div class="card" data-delay="100" style="background:rgba(255,255,255,.03); border-color:rgba(244,162,97,.2);">
+        <div style="text-align:center; padding:2.5rem 1rem 2.5rem;">
+          <div class="badge badge-amber-solid" style="margin-bottom:1rem;">⚡ Aktif</div>
+          <h3 style="font-size:1.8rem; color:var(--white);">Aylık Sınırsız <br><span style="color:var(--amber);">500 TL</span></h3>
+          <p style="margin:1rem 0; color:var(--amber-light);">Tam sınırsız Claude Code erişimi · Türkçe destek</p>
+          <ul style="list-style:none; padding:1rem 0; text-align:left; color:var(--amber-light); font-size:.95rem;">
+            <li style="margin:.4rem 0;">✦ Sınırsız token</li>
+            <li style="margin:.4rem 0;">✦ Tüm modeller (Sonnet 4, Opus 4 …)</li>
+            <li style="margin:.4rem 0;">✦ EFT / Havale ödeme</li>
+            <li style="margin:.4rem 0;">✦ 3 günlük ücretsiz deneme</li>
+          </ul>
+          <a href="register.html" class="btn btn-primary btn-lg" style="width:100%; margin-top:.6rem;">🎁 3 Günlük Ücretsiz Başla</a>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:2rem; text-align:center; color:var(--amber-light); font-size:.9rem;">
+      Deneme süresince herhangi bir kart bilgisi gerekmez. <br>Devam etmek isterseniz, IBANınıza gönderdiğimiz faturayı ödersiniz.
+    </p>
+  </div>
+</section>
+
+<!-- ===== KURULUM (Install) ===== -->
+<section id="install" style="padding:clamp(4rem,8vw,6rem) 0;">
+  <div class="container">
+    <div class="section-head" data-delay="0">
+      <span class="badge badge-outline">Kurulum</span>
+      <h2>Hemen Başlayın — 3 Dakikalık Kurulum</h2>
+      <p>Claude Code CLI'yı LimitChest hesabınızla bağlayın.</p>
+    </div>
+
+    <div class="install-steps" data-delay="100" style="margin-top:2rem;">
+      <div class="step-list" style="counter-reset:step; list-style:none; padding:0;">
+        <div class="step-item" style="counter-increment:step; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border);">
+          <span class="step-num" style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--amber); color:var(--navy); font-weight:700; font-family:monospace; margin-right:.6rem;">1</span>
+          <strong>LimitChest hesabını oluştur.</strong>
+          <span style="color:var(--text-soft);">(3 günlük deneme kuponun otomatik gelir.)</span>
+        </div>
+        <div class="step-item" style="counter-increment:step; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border);">
+          <span class="step-num" style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--amber); color:var(--navy); font-weight:700; font-family:monospace; margin-right:.6rem;">2</span>
+          <strong>API anahtarını al.</strong>
+          <span style="color:var(--text-soft);">Panoldan "Claude Code Token" butonuna tıkla.</span>
+        </div>
+        <div class="step-item" style="counter-increment:step;">
+          <span class="step-num" style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--amber); color:var(--navy); font-weight:700; font-family:monospace; margin-right:.6rem;">3</span>
+          <strong>Claude Code'u kur ve bağla.</strong>
+          <span style="color:var(--text-soft);">Anahtarı ortam değişkenine koy — <code>ANTHROPIC_API_KEY</code>.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal" data-delay="200" style="margin-top:2rem;">
+      <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> Terminal — kurulum rehberi</div>
+      <div id="term-install"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section id="faq" style="background:var(--navy); color:var(--cream); padding:clamp(4rem,8vw,6rem) 0;">
+  <div class="container">
+    <div class="section-head" data-delay="0" style="text-align:center;">
+      <span class="badge badge-outline">Sık Sorulan</span>
+      <h2 style="color:var(--white);">Soru-Cevap</h2>
+    </div>
+
+    <div class="faq-list" style="max-width:730px; margin:2rem auto;">
+      <details style="margin-bottom:1rem; background:rgba(255,255,255,.04); border:1px solid rgba(244,162,97,.15); border-radius:var(--radius-md); padding:.9rem 1.2rem;">
+        <summary style="cursor:pointer; font-weight:600;">3 günlük deneme doğru mu?</summary>
+        <p style="margin:.8rem 0 0; color:var(--cream-dark);">Evet. Kayıt hemen ardından 3 günlük (72-saat) tam sınırsız deneme başlar — kart/kredi kartı gerekmez.</p>
+      </details>
+      <details style="margin-bottom:1rem; background:rgba(255,255,255,.04); border:1px solid rgba(244,162,97,.15); border-radius:var(--radius-md); padding:.9rem 1.2rem;">
+        <summary style="cursor:pointer; font-weight:600;">Devam etmek için kart girmek zorunda mıyım?</summary>
+        <p style="margin:.8rem 0 0; color:var(--cream-dark);">Hayır. Devam etmek isterseniz IBANımıza EFT/Havale yaparsınız; otomatik yenileme yoktur — isterseniz yenilersiniz.</p>
+      </details>
+      <details style="margin-bottom:1rem; background:rgba(255,255,255,.04); border:1px solid rgba(244,162,97,.15); border-radius:var(--radius-md); padding:.9rem 1.2rem;">
+        <summary style="cursor:pointer; font-weight:600;">Hangi modeller var?</summary>
+        <p style="margin:.8rem 0 0; color:var(--cream-dark);">Tüm Anthropic modellerine erişim: Claude Sonnet 4, Opus 4 (ve yeni modeller). Sınırsız kota.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer style="background:var(--navy); color:var(--text-muted); padding:2.8rem 0 1.6rem;">
+  <div class="container">
+    <div class="footer-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:2; gap:1.8rem;">
+      <div>
+        <div class="nav-brand" style="color:var(--white); display:inline;">⚡ LimitChest</div>
+        <p style="margin-top:.6rem; font-size:.88rem;">Sınırsız Claude Code erişimi. 500 TL / ay — Türkiye'ye özel.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Ürün</h4>
+        <ul style="list-style:none; font-size:.88rem;">
+          <li><a href="#features" style="color:inherit;">Özellikler</a></li>
+          <li><a href="#pricing" style="color:inherit;">Fiyatlar</a></li>
+          <li><a href="#install" style="color:inherit;">Kurulum</a></li>
+          <li><a href="support.html" style="color:inherit;">Destek</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Topluluk</h4>
+        <ul style="list-style:none; font-size:.88rem;">
+          <li><a href="community.html" style="color:inherit;">Topluluk</a></li>
+          <li><a href="support.html" style="color:inherit;">Destek Aç</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Yasal</h4>
+        <ul style="list-style:none; font-size:.88rem;">
+          <li><a href="viewer.html?file=license.html" style="color:inherit;">Lisans</a></li>
+          <li><a href="viewer.html?file=privacy.html" style="color:inherit;">Gizlilik</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(244,162,97,.15); margin-top:1.8rem; padding-top:1.4rem; font-size:.85rem; text-align:center;">
+      © 2026 LimitChest — ❤️ ile yapıldı · Türkiye
+    </div>
+  </div>
+</footer>
+
+<!-- ===== Terminal yazım animasyonu ===== -->
+<script>
+/* Komut satırını harf harf yazar, ardından çıktı satırlarını ❯ ile basar.
+   data-term="hero|install" ile bağlanır; bağımlılık yok. */
+(function () {
+  const SCRIPTS = {
+    hero: [
+      { cmd: 'limitchest login', out: ['✦ Giriş yapıldı — durum: 3 günlük ücretsiz deneme'] },
+      { cmd: 'limitchest status', out: ['Plan: Sınırsız · Kota: ∞ · Model: Claude Sonnet 4'] },
+      { cmd: 'claude "Merhaba"', out: ['❯ Claude: Merhaba! Bugün ne kodluyoruz?'] }
+    ],
+    install: [
+      { cmd: 'npm install -g @anthropic-ai/claude-code', out: ['✦ Claude Code kuruldu — PATH\'e eklendi'] },
+      { cmd: 'export ANTHROPIC_BASE_URL=https://api.limitchest.com', out: ['✦ LimitChest uç noktası ayarlandı'] },
+      { cmd: 'export ANTHROPIC_AUTH_TOKEN=sk-lc-****', out: ['✦ Anahtar doğrulandı — sınırsız erişim aktif'] },
+      { cmd: 'claude', out: ['❯ Claude Code v1.0 başlatıldı — iyi kodlamalar!'] }
+    ]
+  };
+
+  function runTerminal(id, script) {
+    const el = document.getElementById(id);
+    if (!el || !script) return;
+    let si = 0, ci = 0, buf = '';
+
+    function render(cursorLine) {
+      let html = '';
+      // tamamlanan adımlar
+      for (let k = 0; k < si; k++) {
+        html += '<div class="term-line"><span class="term-prompt">$</span> ' + esc(script[k].cmd) + '</div>';
+        script[k].out.forEach(o => {
+          html += '<div class="term-line"><span class="term-prompt">❯</span> ' + esc(o) + '</div>';
+        });
+      }
+      // yazılan satır
+      html += '<div class="term-line"><span class="term-prompt">$</span> ' + esc(cursorLine) + '<span class="term-cursor"></span></div>';
+      el.innerHTML = html;
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function tick() {
+      if (si >= script.length) { render(''); return; }
+      const cmd = script[si].cmd;
+      if (ci <= cmd.length) {
+        buf = cmd.slice(0, ci++);
+        render(buf);
+        setTimeout(tick, 34 + Math.random() * 40);
+      } else {
+        render(cmd);
+        setTimeout(() => { si++; ci = 0; tick(); }, 650);
+      }
+    }
+    tick();
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    runTerminal('term-demo', SCRIPTS.hero);
+    runTerminal('term-install', SCRIPTS.install);
+  });
+})();
+</script>
+
+</body>
+</html>

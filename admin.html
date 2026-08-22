@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — LimitChest</title>
+<link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase-min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js" defer></script>
+<style>
+.tabs { display:flex; gap:.6rem; flex-wrap:wrap; margin:1.5rem 0; }
+.tab-btn {
+  background:var(--cream-dark); border:1px solid var(--border);
+  border-radius:var(--radius-full); padding:.55rem 1.3rem;
+  font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; color:var(--text-soft);
+}
+.tab-btn.active { background:var(--amber); color:var(--navy); border-color:var(--amber); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+.row-actions { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.7rem; }
+.row-actions button { font-size:.8rem; padding:.4rem .9rem; border-radius:var(--radius-full); border:none; cursor:pointer; font-weight:600; }
+.btn-mini-ok   { background:#e8f5e9; color:#1e7d32; }
+.btn-mini-rej  { background:#fdecea; color:#b3261e; }
+.btn-mini-ext  { background:var(--amber-light); color:var(--navy); }
+.btn-mini-prom { background:var(--amber); color:var(--navy); }
+table.admin-table { width:100%; border-collapse:collapse; font-size:.88rem; background:var(--white); border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-sm); }
+table.admin-table th, table.admin-table td { padding:.7rem .9rem; text-align:left; border-bottom:1px solid var(--border-soft); }
+table.admin-table th { background:var(--cream-dark); font-size:.8rem; text-transform:uppercase; letter-spacing:.03em; }
+table.admin-table tr:hover { background:var(--cream); }
+.reply-box { width:100%; margin-top:.5rem; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container container">
+    <a href="index.html" class="nav-brand">⚡ LimitChest</a>
+    <span id="nav-auth-area"></span>
+  </div>
+</nav>
+
+<main class="container" style="padding:clamp(2rem,5vw,3rem) clamp(1.5rem,4vw,3rem);">
+  <h1 style="font-size:1.8rem;">🛠️ Admin Paneli</h1>
+  <p id="admin-status" style="color:var(--text-muted); margin-top:.3rem;">Yetki denetleniyor…</p>
+
+  <div id="admin-content" style="display:none;">
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="users">Kullanıcılar</button>
+      <button class="tab-btn" data-tab="payments">Ödemeler</button>
+      <button class="tab-btn" data-tab="support">Destek Talepleri</button>
+    </div>
+
+    <!-- Kullanıcılar -->
+    <div class="tab-panel active" id="tab-users">
+      <div id="users-list">Yükleniyor…</div>
+    </div>
+
+    <!-- Ödemeler -->
+    <div class="tab-panel" id="tab-payments">
+      <div id="payments-list">Yükleniyor…</div>
+    </div>
+
+    <!-- Destek -->
+    <div class="tab-panel" id="tab-support">
+      <div id="support-list">Yükleniyor…</div>
+    </div>
+
+  </div>
+
+  <div id="admin-denied" style="display:none; margin-top:2rem;"></div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const profile = await requireAdmin();
+  if (!profile) return;
+
+  document.getElementById('admin-status').textContent = `Giriş: ${profile.display_name || profile.email} (admin)`;
+  document.getElementById('admin-content').style.display = 'block';
+
+  /* Tabs */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* ---------- Kullanıcılar ---------- */
+  async function loadUsers() {
+    const { data: users } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
+    const box = document.getElementById('users-list');
+    if (!users || !users.length) { box.innerHTML = '<p>Kullanıcı yok.</p>'; return; }
+    box.innerHTML = `<table class="admin-table"><thead><tr>
+      <th>E-posta</th><th>Ad</th><th>Durum</th><th>Ödeme</th><th>Kayıt</th><th>İşlem</th>
+    </tr></thead><tbody>
+    ${users.map(u => {
+      const st = planStatus(u);
+      return `<tr>
+        <td>${u.email}</td>
+        <td>${u.display_name || '—'}</td>
+        <td><span class="status-pill ${st.cls}">${st.text}</span></td>
+        <td>${u.payment_status}</td>
+        <td>${fmtDate(u.created_at)}</td>
+        <td>
+          <div class="row-actions">
+            <button class="btn-mini-ext" onclick="extendTrial('${u.id}')">+3 Gün</button>
+            <button class="btn-mini-prom" onclick="activateSub('${u.id}')">Abonelik Onayla</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('')}
+    </tbody></table>`;
+  }
+
+  window.extendTrial = async (id) => {
+    await sb.from('profiles').update({ trial_ends_at: new Date(Date.now() + 3*86400000).toISOString() }).eq('id', id);
+    loadUsers();
+  };
+  window.activateSub = async (id) => {
+    await sb.from('profiles').update({
+      plan: 'active',
+      subscription_ends_at: new Date(Date.now() + 30*86400000).toISOString(),
+      payment_status: 'paid'
+    }).eq('id', id);
+    loadUsers();
+  };
+
+  /* ---------- Ödemeler ---------- */
+  async function loadPayments() {
+    const { data: pays } = await sb.from('payment_notifications').select('*, profiles(email, display_name)').order('created_at', { ascending: false });
+    const box = document.getElementById('payments-list');
+    if (!pays || !pays.length) { box.innerHTML = '<p>Ödeme bildirimi yok.</p>'; return; }
+    box.innerHTML = pays.map(p => `
+      <div class="list-row">
+        <div class="list-row-head">
+          <strong>${p.profiles?.email || '(kullanıcı)'}</strong>
+          <span class="status-pill status-${p.status}">${p.status === 'pending' ? 'Bekliyor' : p.status === 'approved' ? 'Onaylandı' : 'Reddedildi'}</span>
+        </div>
+        <div class="list-row-meta">Tutar: ${p.amount} TL · ${fmtDate(p.created_at)}</div>
+        ${p.note ? `<p style="margin-top:.5rem; color:var(--text-soft); font-size:.9rem;">Not: ${p.note}</p>` : ''}
+        ${p.status === 'pending' ? `<div class="row-actions">
+          <button class="btn-mini-ok" onclick="approvePay('${p.id}','${p.user_id}')">Onayla</button>
+          <button class="btn-mini-rej" onclick="rejectPay('${p.id}')">Reddet</button>
+        </div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  window.approvePay = async (payId, userId) => {
+    await sb.from('payment_notifications').update({ status: 'approved' }).eq('id', payId);
+    await sb.from('profiles').update({
+      plan: 'active',
+      subscription_ends_at: new Date(Date.now() + 30*86400000).toISOString(),
+      payment_status: 'paid'
+    }).eq('id', userId);
+    loadPayments();
+  };
+  window.rejectPay = async (payId) => {
+    await sb.from('payment_notifications').update({ status: 'rejected' }).eq('id', payId);
+    loadPayments();
+  };
+
+  /* ---------- Destek ---------- */
+  async function loadSupport() {
+    const { data: tickets } = await sb.from('support_tickets').select('*, profiles(email, display_name)').order('created_at', { ascending: false });
+    const box = document.getElementById('support-list');
+    if (!tickets || !tickets.length) { box.innerHTML = '<p>Talep yok.</p>'; return; }
+    box.innerHTML = tickets.map(t => `
+      <div class="list-row">
+        <div class="list-row-head">
+          <strong>${t.subject}</strong>
+          <span class="status-pill status-${t.status}">${t.status === 'open' ? 'Açık' : t.status === 'answered' ? 'Cevaplandı' : 'Kapalı'}</span>
+        </div>
+        <div class="list-row-meta">${t.profiles?.email || '(kullanıcı)'} · ${t.category} · ${fmtDate(t.created_at)}</div>
+        <p style="margin-top:.5rem; color:var(--text-soft); font-size:.92rem;">${t.message}</p>
+        ${t.admin_reply ? `<p style="font-size:.88rem; margin-top:.4rem;"><strong>Cevap:</strong> ${t.admin_reply}</p>` : ''}
+        ${t.status !== 'closed' ? `
+          <textarea class="reply-box" id="reply-${t.id}" placeholder="Cevabını yaz…">${t.admin_reply || ''}</textarea>
+          <div class="row-actions">
+            <button class="btn-mini-ok" onclick="replyTicket('${t.id}')">Cevapla & Kapat</button>
+          </div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  window.replyTicket = async (id) => {
+    const reply = document.getElementById('reply-' + id).value.trim();
+    await sb.from('support_tickets').update({ admin_reply: reply, status: 'answered' }).eq('id', id);
+    loadSupport();
+  };
+
+  loadUsers();
+  loadPayments();
+  loadSupport();
+});
+</script>
+
+</body>
+</html>

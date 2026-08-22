@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panelim — LimitChest</title>
+<link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase-min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js" defer></script>
+<style>
+.dash-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.6rem; }
+.dash-card h3 { margin-bottom:.4rem; }
+.progress {
+  height:10px; background:var(--cream-dark); border-radius:var(--radius-full);
+  overflow:hidden; margin-top:.8rem;
+}
+.progress-fill {
+  height:100%; background:linear-gradient(90deg,var(--amber),var(--amber-dark));
+  border-radius:var(--radius-full); transition:width .6s var(--ease-out);
+}
+.setup-code { font-size:.85rem; line-height:1.9; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container container">
+    <a href="index.html" class="nav-brand">⚡ LimitChest</a>
+    <button class="nav-toggle" aria-label="Menü" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html#features">Özellikler</a>
+      <a href="index.html#pricing">Fiyatlandırma</a>
+      <a href="community.html">Topluluk</a>
+      <a href="support.html">Destek</a>
+      <span id="nav-auth-area"></span>
+    </div>
+  </div>
+</nav>
+
+<main class="container" style="padding:clamp(2rem,5vw,3.5rem) clamp(1.5rem,4vw,3rem);">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1 id="greeting" style="font-size:1.8rem;">Hoş geldin…</h1>
+      <p id="plan-line" style="color:var(--text-muted); margin-top:.3rem;">Yükleniyor…</p>
+    </div>
+    <span id="plan-badge" class="status-pill">…</span>
+  </div>
+
+  <div class="dash-grid" style="margin-top:2rem;">
+
+    <!-- Deneme / abonelik kartı -->
+    <div class="card dash-card">
+      <h3>📊 Durum</h3>
+      <p id="status-text" style="color:var(--text-soft); margin-top:.5rem;">—</p>
+      <div class="progress"><div id="trial-bar" class="progress-fill" style="width:0%"></div></div>
+      <p id="trial-note" style="font-size:.82rem; color:var(--text-muted); margin-top:.5rem;"></p>
+    </div>
+
+    <!-- API anahtarı / kurulum -->
+    <div class="card dash-card">
+      <h3>🔑 Claude Code Bağlantısı</h3>
+      <p style="color:var(--text-soft); font-size:.92rem; margin:.5rem 0 1rem;">
+        Aşağıdaki ortam değişkenlerini ayarla ve <code>claude</code> komutunu çalıştır:
+      </p>
+      <div class="copy-box">
+        <span>ANTHROPIC_BASE_URL=https://api.limitchest.com</span>
+        <button onclick="copyText('export ANTHROPIC_BASE_URL=https://api.limitchest.com', this)">Kopyala</button>
+      </div>
+      <div class="copy-box" style="margin-top:.7rem;">
+        <span id="token-box">ANTHROPIC_AUTH_TOKEN=sk-lc-…</span>
+        <button id="token-copy">Kopyala</button>
+      </div>
+      <div class="terminal" style="margin-top:1rem;">
+        <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> kurulum</div>
+        <div class="term-line"><span class="term-prompt">$</span> npm install -g @anthropic-ai/claude-code</div>
+        <div class="term-line"><span class="term-prompt">$</span> export ANTHROPIC_BASE_URL=https://api.limitchest.com</div>
+        <div class="term-line"><span class="term-prompt">$</span> export ANTHROPIC_AUTH_TOKEN=sk-lc-****</div>
+        <div class="term-line"><span class="term-prompt">$</span> claude</div>
+        <div class="term-line"><span class="term-prompt">❯</span> ✦ LimitChest üzerinden sınırsız erişim aktif</div>
+      </div>
+    </div>
+
+    <!-- Ödeme (IBAN) -->
+    <div class="card dash-card">
+      <h3>💳 Abonelik / Ödeme</h3>
+      <p style="color:var(--text-soft); font-size:.92rem; margin:.5rem 0 .9rem;">
+        Aylık <strong>500 TL</strong> — sınırsız kullanım. EFT/Havale ile öde, bildirimi onaylayalım.
+      </p>
+      <div class="copy-box">
+        <span id="iban-text">IBAN yükleniyor…</span>
+        <button id="iban-copy">Kopyala</button>
+      </div>
+      <p style="font-size:.85rem; color:var(--text-muted); margin-top:.5rem;">
+        Alıcı: <span id="iban-holder">—</span> · Banka: <span id="iban-bank">—</span>
+      </p>
+
+      <form id="pay-form" style="margin-top:1.1rem;">
+        <div class="form-field">
+          <label for="amount">Tutar (TL)</label>
+          <input type="number" id="amount" value="500" min="0" required>
+        </div>
+        <div class="form-field">
+          <label for="note">Not (opsiyonel — dekont no vb.)</label>
+          <input type="text" id="note" placeholder="Örn: dekont 12345">
+        </div>
+        <button type="submit" id="pay-btn" class="btn btn-primary" style="width:100%;">Ödeme Yaptım — Bildir</button>
+      </form>
+      <div id="pay-msg" style="margin-top:.7rem;"></div>
+    </div>
+
+    <!-- Destek taleplerim -->
+    <div class="card dash-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>🎫 Destek Taleplerim</h3>
+        <a href="support.html" class="btn btn-outline btn-sm">+ Yeni Talep</a>
+      </div>
+      <div id="tickets-list" style="margin-top:1rem;">
+        <p style="color:var(--text-muted); font-size:.9rem;">Yükleniyor…</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer style="background:var(--navy); color:var(--text-muted); padding:2.2rem 0 1.4rem; margin-top:2rem;">
+  <div class="container" style="text-align:center; font-size:.85rem;">
+    ⚡ LimitChest — Sınırsız Claude Code · © 2026
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await requireAuth();
+  if (!session) return;
+
+  const profile = await getProfile(true);
+  if (!profile) return;
+
+  /* --- Karşılama + durum --- */
+  document.getElementById('greeting').textContent = `Hoş geldin, ${profile.display_name || 'kullanıcı'}`;
+  const st = planStatus(profile);
+  const badge = document.getElementById('plan-badge');
+  badge.textContent = st.text;
+  badge.classList.add(st.cls);
+  document.getElementById('status-text').textContent =
+    accessActive(profile)
+      ? 'Erişimin aktif — sınırsız Claude Code kullanabilirsin.'
+      : 'Deneme süren doldu. Devam etmek için aşağıdan ödeme yapabilirsin.';
+
+  /* --- Deneme progress bar --- */
+  if (profile.plan === 'trial' && profile.trial_ends_at) {
+    const total = LIMITCHEST_CONFIG.TRIAL_DAYS;
+    const left  = daysLeft(profile.trial_ends_at);
+    const used  = Math.max(0, Math.min(total, total - left));
+    document.getElementById('trial-bar').style.width = ((used / total) * 100) + '%';
+    document.getElementById('trial-note').textContent = left > 0
+      ? `${left} gün kaldı (${total} günlük deneme)`
+      : 'Deneme tamamlandı';
+  } else if (profile.plan === 'active') {
+    document.getElementById('trial-bar').style.width = '100%';
+    document.getElementById('trial-note').textContent = 'Abonelik aktif 🎉';
+  }
+
+  /* --- API token (kullanıcı id'sinden türetilmiş gösterim) --- */
+  const fakeToken = 'sk-lc-' + profile.id.replace(/-/g, '').slice(0, 24);
+  document.getElementById('token-box').textContent = 'ANTHROPIC_AUTH_TOKEN=' + fakeToken;
+  document.getElementById('token-copy').addEventListener('click', function () {
+    copyText('export ANTHROPIC_AUTH_TOKEN=' + fakeToken, this);
+  });
+
+  /* --- IBAN --- */
+  const iban = LIMITCHEST_CONFIG.IBAN;
+  document.getElementById('iban-text').textContent = iban.iban;
+  document.getElementById('iban-holder').textContent = iban.holder;
+  document.getElementById('iban-bank').textContent = iban.bank;
+  document.getElementById('iban-copy').addEventListener('click', function () {
+    copyText(iban.iban.replace(/\s/g, ''), this);
+  });
+
+  /* --- Ödeme bildirimi --- */
+  document.getElementById('pay-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msgEl = document.getElementById('pay-msg');
+    const btn = document.getElementById('pay-btn');
+    btn.disabled = true; btn.textContent = 'Gönderiliyor…';
+
+    const { error } = await sb.from('payment_notifications').insert({
+      user_id: profile.id,
+      amount: parseFloat(document.getElementById('amount').value) || 500,
+      note: document.getElementById('note').value.trim() || null
+    });
+
+    btn.disabled = false; btn.textContent = 'Ödeme Yaptım — Bildir';
+    msgEl.innerHTML = error
+      ? '<div class="form-error">' + error.message + '</div>'
+      : '<div class="form-success">✅ Bildirim alındı! Onaylandığında aboneliğin aktif olacak.</div>';
+    if (!error) document.getElementById('pay-form').reset();
+  });
+
+  /* --- Destek taleplerim --- */
+  const { data: tickets } = await sb.from('support_tickets')
+    .select('*').eq('user_id', profile.id).order('created_at', { ascending: false });
+
+  const list = document.getElementById('tickets-list');
+  if (!tickets || !tickets.length) {
+    list.innerHTML = '<p style="color:var(--text-muted); font-size:.9rem;">Henüz talebin yok. <a href="support.html">İlk talebini aç →</a></p>';
+  } else {
+    list.innerHTML = tickets.map(t => `
+      <div class="list-row">
+        <div class="list-row-head">
+          <strong>${t.subject}</strong>
+          <span class="status-pill status-${t.status}">${t.status === 'open' ? 'Açık' : t.status === 'answered' ? 'Cevaplandı' : 'Kapalı'}</span>
+        </div>
+        <div class="list-row-meta">${fmtDate(t.created_at)} · ${t.category}</div>
+        ${t.admin_reply ? `<div style="margin-top:.6rem; padding:.7rem .9rem; background:var(--cream-dark); border-left:3px solid var(--amber); border-radius:6px; font-size:.88rem;">${t.admin_reply}</div>` : ''}
+      </div>
+    `).join('');
+  }
+});
+</script>
+
+</body>
+</html>

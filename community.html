@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topluluk — LimitChest</title>
+<link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase-min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js" defer></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container container">
+    <a href="index.html" class="nav-brand">⚡ LimitChest</a>
+    <button class="nav-toggle" aria-label="Menü" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+    <div class="nav-links">
+      <a href="index.html#features">Özellikler</a>
+      <a href="index.html#pricing">Fiyatlandırma</a>
+      <a href="community.html">Topluluk</a>
+      <a href="support.html">Destek</a>
+      <span id="nav-auth-area"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Başlık -->
+<section style="background:var(--navy); color:var(--cream); padding:clamp(2.5rem,5vw,4rem) 0;">
+  <div class="container" style="text-align:center;">
+    <span class="badge badge-outline">Topluluk</span>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem); margin:.7rem 0 .6rem;">LimitChest kullanıcıları burada buluşuyor</h1>
+    <p style="color:var(--amber-light); max-width:520px; margin:0 auto;">Deneyimlerini paylaş, soru sor, topluluğa katıl.</p>
+    <div id="cta-guest" style="display:none; margin-top:1.4rem;">
+      <a href="register.html" class="btn btn-primary btn-lg">🎁 Ücretsiz Dene & Katıl</a>
+    </div>
+  </div>
+</section>
+
+<main class="container" style="padding:clamp(2.5rem,5vw,3.5rem) clamp(1.5rem,4vw,3rem); max-width:760px;">
+
+  <!-- Yorum yazma (girişliyse) -->
+  <div class="card" id="composer-card" style="display:none;">
+    <h2 style="font-size:1.2rem;">✍️ Yorum Yaz</h2>
+    <form id="post-form" style="margin-top:.9rem;">
+      <div class="form-field">
+        <textarea id="post-body" required placeholder="Ne düşünüyorsun? Deneyimini paylaş…"></textarea>
+      </div>
+      <button type="submit" id="post-btn" class="btn btn-primary">Gönder</button>
+    </form>
+    <div id="post-msg" style="margin-top:.7rem;"></div>
+  </div>
+
+  <!-- Giriş yapmamışlara -->
+  <div class="card" id="guest-note" style="display:none;">
+    <p style="color:var(--text-soft);">Yorum yapmak için giriş yapmalısın.
+      <a href="login.html" style="color:var(--amber-dark); font-weight:600;">Giriş yap →</a> ·
+      Hesabın yok mu? <a href="register.html" style="color:var(--amber-dark); font-weight:600;">Ücretsiz dene →</a>
+    </p>
+  </div>
+
+  <!-- Feed -->
+  <h2 style="font-size:1.3rem; margin:2rem 0 1rem;">💬 Son Gönderiler</h2>
+  <div id="posts-feed">
+    <p style="color:var(--text-muted); font-size:.9rem;">Yükleniyor…</p>
+  </div>
+
+</main>
+
+<footer style="background:var(--navy); color:var(--text-muted); padding:2.2rem 0 1.4rem; margin-top:2rem;">
+  <div class="container" style="text-align:center; font-size:.85rem;">
+    ⚡ LimitChest — Sınırsız Claude Code · © 2026
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const session = await getSession();
+  const feed = document.getElementById('posts-feed');
+
+  /* Giriş durumuna göre UI */
+  if (session) {
+    document.getElementById('composer-card').style.display = 'block';
+  } else {
+    document.getElementById('guest-note').style.display = 'block';
+    document.getElementById('cta-guest').style.display = 'block';
+  }
+
+  /* --- Gönderi listesi --- */
+  async function loadPosts() {
+    const { data: posts } = await sb.from('community_posts')
+      .select('*').order('created_at', { ascending: false }).limit(50);
+
+    if (!posts || !posts.length) {
+      feed.innerHTML = '<p style="color:var(--text-muted); font-size:.92rem;">Henüz gönderi yok — ilk yorumu sen yaz! ✦</p>';
+      return;
+    }
+    feed.innerHTML = posts.map(p => `
+      <div class="list-row">
+        <div class="list-row-head">
+          <strong>${p.author_name || 'Anonim'}</strong>
+          ${p.badge_label ? `<span class="badge badge-amber">${p.badge_label}</span>` : ''}
+        </div>
+        <p style="margin:.55rem 0 .3rem; color:var(--text-soft);">${p.body}</p>
+        <div class="list-row-meta">${fmtDate(p.created_at)}</div>
+      </div>
+    `).join('');
+  }
+  await loadPosts();
+
+  /* --- Realtime: yeni gönderi gelince listeye ekle --- */
+  sb.channel('lc-community')
+    .on('postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'community_posts' },
+      (payload) => {
+        const empty = feed.querySelector('p');
+        if (empty && feed.children.length === 1) feed.innerHTML = '';
+        const p = payload.new;
+        feed.insertAdjacentHTML('afterbegin', `
+          <div class="list-row">
+            <div class="list-row-head">
+              <strong>${p.author_name || 'Anonim'}</strong>
+              ${p.badge_label ? `<span class="badge badge-amber">${p.badge_label}</span>` : ''}
+            </div>
+            <p style="margin:.55rem 0 .3rem; color:var(--text-soft);">${p.body}</p>
+            <div class="list-row-meta">${fmtDate(p.created_at)}</div>
+          </div>
+        `);
+      })
+    .subscribe();
+
+  /* --- Gönderi ekleme --- */
+  document.getElementById('post-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msgEl = document.getElementById('post-msg');
+    const btn = document.getElementById('post-btn');
+    btn.disabled = true;
+
+    const body = document.getElementById('post-body').value.trim();
+    const profile = await getProfile();
+
+    const { error } = await sb.from('community_posts').insert({
+      user_id: session.user.id,
+      author_name: profile?.display_name || session.user.email.split('@')[0],
+      body
+    });
+
+    btn.disabled = false;
+    if (error) {
+      msgEl.innerHTML = '<div class="form-error">' + error.message + '</div>';
+      return;
+    }
+    msgEl.innerHTML = '<div class="form-success">✅ Yorumun paylaşıldı!</div>';
+    document.getElementById('post-form').reset();
+    setTimeout(() => msgEl.innerHTML = '', 2500);
+  });
+});
+</script>
+
+</body>
+</html>
