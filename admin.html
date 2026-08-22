@@ -19,6 +19,7 @@
   border-radius:var(--radius-full); padding:.55rem 1.3rem;
   font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; color:var(--text-soft);
 }
+.tab-btn:hover { background:#FFE9D2; }
 .tab-btn.active { background:var(--amber); color:var(--navy); border-color:var(--amber); }
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
@@ -45,15 +46,16 @@ table.admin-table tr:hover { background:var(--cream); }
 </nav>
 
 <main class="container" style="padding:clamp(2rem,5vw,3rem) clamp(1.5rem,4vw,3rem);">
+  <span class="eyebrow">Yönetim</span>
   <h1 style="font-size:1.8rem;">Admin Paneli</h1>
   <p id="admin-status" style="color:var(--text-muted); margin-top:.3rem;">Yetki denetleniyor…</p>
 
   <div id="admin-content" style="display:none;">
 
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="users">Kullanıcılar</button>
-      <button class="tab-btn" data-tab="payments">Ödemeler</button>
-      <button class="tab-btn" data-tab="support">Destek Talepleri</button>
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="users" role="tab">Kullanıcılar</button>
+      <button class="tab-btn" data-tab="payments" role="tab">Ödemeler</button>
+      <button class="tab-btn" data-tab="support" role="tab">Destek Talepleri</button>
     </div>
 
     <!-- Kullanıcılar -->

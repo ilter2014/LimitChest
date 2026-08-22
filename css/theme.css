@@ -21,7 +21,7 @@
   --white:        #ffffff;
   --text:         #1A1A2E;
   --text-soft:    #5C4F3E;
-  --text-muted:   #8A7F72;
+  --text-muted:   #6F6458;
 
   /* Sınırlar / gölgeler */
   --border:        rgba(26,26,46,.08);
@@ -410,3 +410,21 @@ footer a:hover { color:var(--amber); }
 
 @media (max-width:800px){ .footer-grid{grid-template-columns:1fr 1fr;} }
 @media (max-width:480px){ .footer-grid{grid-template-columns:1fr;} }
+
+/* ============ MOBİL İNCE AYAR ============ */
+@media (max-width: 640px) {
+  .pricing-card { padding:1.8rem 1.2rem; }
+  .price-value { font-size:2.6rem; }
+  .step { gap:.9rem; }
+  .step:not(:last-child)::before { left:19px; top:42px; }
+  .step-num { width:40px; height:40px; font-size:.95rem; border-radius:11px; }
+  .faq-item summary { padding:.95rem 1rem; font-size:.93rem; }
+  .faq-item p { padding:0 1rem 1rem; }
+  .feature-card { padding:1.4rem; }
+  .icon-tile { width:40px; height:40px; }
+}
+/* Hareket duyarlılığı olan kullanıcılar için animasyonları kıs */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  html { scroll-behavior:auto; }
+}
