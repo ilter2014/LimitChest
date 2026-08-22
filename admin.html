@@ -110,9 +110,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('.tabs').insertAdjacentHTML('afterend', searchBoxHTML);
 
   window.renderAll = () => {
-    renderUsers(document.getElementById('admin-search')?.value || '');
-    renderPayments();
-    renderSupport();
+    const q = document.getElementById('admin-search')?.value || '';
+    renderUsers(q);
+    renderPayments(q);
+    renderSupport(q);
   };
   function renderUsers(q) {
     const box = document.getElementById('users-list');
@@ -167,10 +168,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     _pays = pays || [];
     renderPayments();
   }
-  function renderPayments() {
+  function renderPayments(q = '') {
     const box = document.getElementById('payments-list');
     if (!_pays.length) { box.innerHTML = '<p>Ödeme bildirimi yok.</p>'; return; }
-    box.innerHTML = _pays.map(p => `
+    const plist = _pays.filter(p => matches(q, p.profiles?.email, p.note, p.status, String(p.amount)));
+    box.innerHTML = plist.length ? plist.map(p => `
       <div class="list-row">
         <div class="list-row-head">
           <strong>${p.profiles?.email || '(kullanıcı)'}</strong>
@@ -183,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <button class="btn-mini-rej" onclick="rejectPay('${p.id}')">Reddet</button>
         </div>` : ''}
       </div>
-    `).join('');
+    `).join('') : '<p>Eşleşen ödeme yok.</p>';
   }
 
   window.approvePay = async (payId, userId) => {

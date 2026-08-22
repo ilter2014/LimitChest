@@ -200,7 +200,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       : 'Deneme tamamlandı';
   } else if (profile.plan === 'active') {
     document.getElementById('trial-bar').style.width = '100%';
-    document.getElementById('trial-note').textContent = 'Abonelik aktif 🎉';
+    const subLeft = daysLeft(profile.subscription_ends_at);
+    document.getElementById('trial-note').textContent = subLeft > 0
+      ? `Abonelik aktif — ${profile.subscription_ends_at ? new Date(profile.subscription_ends_at).toLocaleDateString('tr-TR') : ''} tarihine kadar (${subLeft} gün)`
+      : 'Abonelik aktif';
   }
 
   /* --- API token (kullanıcı id'sinden türetilmiş gösterim) --- */
