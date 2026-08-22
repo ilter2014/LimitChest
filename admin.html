@@ -96,15 +96,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  /* ---------- Kullanıcılar ---------- */
-  async function loadUsers() {
-    const { data: users } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
+  /* ---------- Arama filtresi ---------- */
+  let _users = [], _pays = [], _tickets = [];
+  function matches(q, ...fields) {
+    if (!q) return true;
+    q = q.toLowerCase();
+    return fields.some(f => String(f || '').toLowerCase().includes(q));
+  }
+  const searchBoxHTML = `
+    <input type="search" id="admin-search" class="form-field" placeholder="E-posta, ad veya durum ara…"
+           style="max-width:340px; margin-bottom:1rem;" oninput="renderAll()">`;
+
+  document.querySelector('.tabs').insertAdjacentHTML('afterend', searchBoxHTML);
+
+  window.renderAll = () => {
+    renderUsers(document.getElementById('admin-search')?.value || '');
+    renderPayments();
+    renderSupport();
+  };
+  function renderUsers(q) {
     const box = document.getElementById('users-list');
-    if (!users || !users.length) { box.innerHTML = '<p>Kullanıcı yok.</p>'; return; }
+    if (!_users.length) { box.innerHTML = '<p>Kullanıcı yok.</p>'; return; }
+    const list = _users.filter(u => matches(q, u.email, u.display_name, u.plan, u.payment_status));
+    if (!list.length) { box.innerHTML = '<p>Eşleşen kullanıcı yok.</p>'; return; }
     box.innerHTML = `<table class="admin-table"><thead><tr>
       <th>E-posta</th><th>Ad</th><th>Durum</th><th>Ödeme</th><th>Kayıt</th><th>İşlem</th>
     </tr></thead><tbody>
-    ${users.map(u => {
+    ${list.map(u => {
       const st = planStatus(u);
       return `<tr>
         <td>${u.email}</td>
@@ -123,6 +141,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     </tbody></table>`;
   }
 
+  /* ---------- Kullanıcılar ---------- */
+  async function loadUsers() {
+    const { data: users } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
+    _users = users || [];
+    renderUsers('');
+  }
+
   window.extendTrial = async (id) => {
     await sb.from('profiles').update({ trial_ends_at: new Date(Date.now() + 3*86400000).toISOString() }).eq('id', id);
     loadUsers();
@@ -139,9 +164,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   /* ---------- Ödemeler ---------- */
   async function loadPayments() {
     const { data: pays } = await sb.from('payment_notifications').select('*, profiles(email, display_name)').order('created_at', { ascending: false });
+    _pays = pays || [];
+    renderPayments();
+  }
+  function renderPayments() {
     const box = document.getElementById('payments-list');
-    if (!pays || !pays.length) { box.innerHTML = '<p>Ödeme bildirimi yok.</p>'; return; }
-    box.innerHTML = pays.map(p => `
+    if (!_pays.length) { box.innerHTML = '<p>Ödeme bildirimi yok.</p>'; return; }
+    box.innerHTML = _pays.map(p => `
       <div class="list-row">
         <div class="list-row-head">
           <strong>${p.profiles?.email || '(kullanıcı)'}</strong>
