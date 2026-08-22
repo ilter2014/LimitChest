@@ -119,16 +119,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('cta-guest').style.display = 'block';
   }
 
-  /* --- Gönderi listesi --- */
-  async function loadPosts() {
-    const { data: posts } = await sb.from('community_posts')
-      .select('*').order('created_at', { ascending: false }).limit(50);
+  /* --- Gönderi listesi (sayfalı) --- */
+  const PAGE_SIZE = 10;
+  let lastCreatedAt = null;
+  let exhausted = false;
 
-    if (!posts || !posts.length) {
-      feed.innerHTML = '<p style="color:var(--text-muted); font-size:.92rem;">Henüz gönderi yok — ilk yorumu sen yaz! ✦</p>';
-      return;
-    }
-    feed.innerHTML = posts.map(p => `
+  function postHTML(p) {
+    return `
       <div class="list-row">
         <div class="list-row-head">
           <strong>${p.author_name || 'Anonim'}</strong>
@@ -136,10 +133,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
         <p style="margin:.55rem 0 .3rem; color:var(--text-soft);">${p.body}</p>
         <div class="list-row-meta">${fmtDate(p.created_at)}</div>
-      </div>
-    `).join('');
+      </div>`;
   }
-  await loadPosts();
+
+  async function loadMore(append = true) {
+    if (exhausted) return;
+    let q = sb.from('community_posts').select('*').order('created_at', { ascending: false }).limit(PAGE_SIZE + 1);
+    if (append && lastCreatedAt) q = q.lt('created_at', lastCreatedAt);
+
+    const { data: posts } = await q;
+    const page = (posts || []).slice(0, PAGE_SIZE);
+    exhausted = (posts || []).length <= PAGE_SIZE;
+
+    if (!page.length && !append) {
+      feed.innerHTML = '<p style="color:var(--text-muted); font-size:.92rem;">Henüz gönderi yok — ilk yorumu sen yaz!</p>';
+      updateBtn();
+      return;
+    }
+    if (append) {
+      feed.insertAdjacentHTML('beforeend', page.map(postHTML).join(''));
+    } else {
+      feed.innerHTML = page.map(postHTML).join('') ||
+        '<p style="color:var(--text-muted); font-size:.92rem;">Henüz gönderi yok — ilk yorumu sen yaz!</p>';
+    }
+    if (page.length) lastCreatedAt = page[page.length - 1].created_at;
+    updateBtn();
+  }
+
+  function updateBtn() {
+    let btn = document.getElementById('load-more');
+    if (exhausted) { btn?.remove(); return; }
+    if (!btn) {
+      document.getElementById('posts-feed').insertAdjacentHTML('afterend',
+        '<button id="load-more" class="btn btn-outline" style="margin:1.2rem auto 0; display:block;">Daha Fazla Göster</button>');
+      document.getElementById('load-more').addEventListener('click', () => loadMore(true));
+    }
+  }
+
+  await loadMore(false);
 
   /* --- Realtime: yeni gönderi gelince listeye ekle --- */
   sb.channel('lc-community')
