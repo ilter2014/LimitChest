@@ -91,13 +91,13 @@
 
     <!-- Sol taraf: tanıtım + terminal -->
     <div class="auth-side">
-      <span class="badge badge-outline">✦ Hesap Girişi</span>
+      <span class="eyebrow">Hesap Girişi</span>
       <h1>Tekrar hoş geldin.</h1>
       <p>Paneline gir, API anahtarını al ve Claude Code'unu sınırsız kullanmaya devam et. Kota yok — sadece LimitChest.</p>
       <ul class="auth-points">
-        <li>✦ Sınırsız token · tüm modeller</li>
-        <li>✦ Anlık anahtar yönetimi</li>
-        <li>✦ Türkçe destek, EFT / Havale</li>
+        <li>Sınırsız token · tüm modeller</li>
+        <li>Anlık anahtar yönetimi</li>
+        <li>Türkçe destek, EFT / Havale</li>
       </ul>
       <div class="term-mini" style="margin-top:1.6rem;">
         <span class="term-prompt">$</span> limitchest auth --login
@@ -133,7 +133,7 @@
           </div>
         </div>
 
-        <button type="submit" id="submit-btn" class="btn btn-primary btn-block">🔓 Giriş Yap</button>
+        <button type="submit" id="submit-btn" class="btn btn-primary btn-block">Giriş Yap</button>
       </form>
 
       <div class="auth-alt">
@@ -148,40 +148,38 @@
 </main>
 
 <!-- ===== FOOTER ===== -->
-<footer style="background:var(--navy); color:var(--text-muted); padding:2.8rem 0 1.6rem;">
+<footer>
   <div class="container">
-    <div class="footer-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1.8rem;">
+    <div class="footer-grid">
       <div>
-        <div class="nav-brand" style="color:var(--white); display:inline;">⚡ LimitChest</div>
-        <p style="margin-top:.6rem; font-size:.88rem;">Sınırsız Claude Code erişimi. 500 TL / ay — Türkiye'ye özel.</p>
+        <a href="index.html" class="nav-brand nav-logo" style="color:#fff;"><img src="logo/logo.svg" alt="">LimitChest</a>
+        <p style="margin-top:.8rem; font-size:.87rem; max-width:260px;">Türkiye'den sınırsız Claude Code erişimi. Basit fiyat, sınırsız kullanım.</p>
       </div>
       <div>
-        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Ürün</h4>
-        <ul style="list-style:none; font-size:.88rem;">
-          <li><a href="index.html#features" style="color:inherit;">Özellikler</a></li>
-          <li><a href="index.html#pricing" style="color:inherit;">Fiyatlar</a></li>
-          <li><a href="index.html#install" style="color:inherit;">Kurulum</a></li>
-          <li><a href="support.html" style="color:inherit;">Destek</a></li>
+        <h4>Ürün</h4>
+        <ul>
+          <li><a href="index.html">Neden Biz</a></li>
+          <li><a href="index.html#pricing">Fiyat</a></li>
+          <li><a href="index.html#install">Başlangıç</a></li>
         </ul>
       </div>
       <div>
-        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Topluluk</h4>
-        <ul style="list-style:none; font-size:.88rem;">
-          <li><a href="community.html" style="color:inherit;">Topluluk</a></li>
-          <li><a href="support.html" style="color:inherit;">Destek Aç</a></li>
+        <h4>Destek</h4>
+        <ul>
+          <li><a href="support.html">Destek Talebi</a></li>
+          <li><a href="community.html">Topluluk</a></li>
+          <li><a href="dashboard.html">Panelim</a></li>
         </ul>
       </div>
       <div>
-        <h4 style="color:var(--amber); font-size:.95rem; margin-bottom:.8rem;">Yasal</h4>
-        <ul style="list-style:none; font-size:.88rem;">
-          <li><a href="viewer.html?file=license.html" style="color:inherit;">Lisans</a></li>
-          <li><a href="viewer.html?file=privacy.html" style="color:inherit;">Gizlilik</a></li>
+        <h4>Hesap</h4>
+        <ul>
+          <li><a href="login.html">Giriş Yap</a></li>
+          <li><a href="register.html">Ücretsiz Dene</a></li>
         </ul>
       </div>
     </div>
-    <div style="border-top:1px solid rgba(244,162,97,.15); margin-top:1.8rem; padding-top:1.4rem; font-size:.85rem; text-align:center;">
-      © 2026 LimitChest — ❤️ ile yapıldı · Türkiye
-    </div>
+    <div class="footer-bottom">© 2026 LimitChest</div>
   </div>
 </footer>
 
