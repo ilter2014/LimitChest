@@ -293,7 +293,7 @@ pre {
 
 /* Auth sayfa düzeni */
 .auth-wrap {
-  min-height:calc(100vh - 64px);
+  min-height:min(72vh, 720px);
   display:flex; align-items:center; justify-content:center;
   padding:2.5rem 1rem;
 }
