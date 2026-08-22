@@ -215,7 +215,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /* --- IBAN --- */
   const iban = LIMITCHEST_CONFIG.IBAN;
-  document.getElementById('iban-text').textContent = iban.iban;
+  if (/TR00\s?0{4}/.test(iban.iban)) {
+    document.getElementById('iban-text').textContent = 'IBAN henüz tanımlanmadı (site sahibi js/config.js dosyasına eklemeli)';
+    document.getElementById('iban-copy')?.style.setProperty('display','none');
+    document.getElementById('iban-holder').textContent = '—';
+    document.getElementById('iban-bank').textContent = '—';
+  } else {
+    document.getElementById('iban-text').textContent = iban.iban;
+  }
   document.getElementById('iban-holder').textContent = iban.holder;
   document.getElementById('iban-bank').textContent = iban.bank;
   document.getElementById('iban-copy').addEventListener('click', function () {

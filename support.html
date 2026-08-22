@@ -66,8 +66,9 @@
           </select>
         </div>
         <div class="form-field">
-          <label for="message">Mesajın *</label>
-          <textarea id="message" required placeholder="Sorununu detaylıca anlat…"></textarea>
+          <label for="message">Mesajın</label>
+          <textarea id="message" required maxlength="2000" placeholder="Sorununu detaylıca anlat…"></textarea>
+          <small id="msg-counter" style="display:block; text-align:right; color:var(--text-muted); font-size:.78rem; margin-top:.3rem;">0 / 2000</small>
         </div>
         <button type="submit" id="ticket-btn" class="btn btn-primary" style="width:100%;">Talebi Gönder</button>
       </form>
@@ -201,6 +202,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     `).join('');
   }
+  const msgEl2 = document.getElementById('message');
+  const counter = document.getElementById('msg-counter');
+  msgEl2?.addEventListener('input', () => {
+    counter.textContent = msgEl2.value.length + ' / 2000';
+  });
+
   loadMyTickets();
 });
 </script>
