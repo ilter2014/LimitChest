@@ -75,8 +75,8 @@
         Aşağıdaki ortam değişkenlerini ayarla ve <code>claude</code> komutunu çalıştır:
       </p>
       <div class="copy-box">
-        <span>ANTHROPIC_BASE_URL=https://api.limitchest.com</span>
-        <button onclick="copyText('export ANTHROPIC_BASE_URL=https://api.limitchest.com', this)">Kopyala</button>
+        <span>setx ANTHROPIC_BASE_URL "https://api.limitchest.com"</span>
+        <button onclick="copyText('setx ANTHROPIC_BASE_URL \"https://api.limitchest.com\"', this)">Kopyala</button>
       </div>
       <div class="copy-box" style="margin-top:.7rem;">
         <span id="token-box">ANTHROPIC_AUTH_TOKEN=sk-lc-…</span>
@@ -85,8 +85,8 @@
       <div class="terminal" style="margin-top:1rem;">
         <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> kurulum</div>
         <div class="term-line"><span class="term-prompt">$</span> npm install -g @anthropic-ai/claude-code</div>
-        <div class="term-line"><span class="term-prompt">$</span> export ANTHROPIC_BASE_URL=https://api.limitchest.com</div>
-        <div class="term-line"><span class="term-prompt">$</span> export ANTHROPIC_AUTH_TOKEN=sk-lc-****</div>
+        <div class="term-line"><span class="term-prompt">$</span> setx ANTHROPIC_BASE_URL "https://api.limitchest.com"</div>
+        <div class="term-line"><span class="term-prompt">$</span> setx ANTHROPIC_AUTH_TOKEN "sk-lc-****"</div>
         <div class="term-line"><span class="term-prompt">$</span> claude</div>
         <div class="term-line"><span class="term-prompt">❯</span> ✦ LimitChest üzerinden sınırsız erişim aktif</div>
       </div>
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fakeToken = 'sk-lc-' + profile.id.replace(/-/g, '').slice(0, 24);
   document.getElementById('token-box').textContent = 'ANTHROPIC_AUTH_TOKEN=' + fakeToken;
   document.getElementById('token-copy').addEventListener('click', function () {
-    copyText('export ANTHROPIC_AUTH_TOKEN=' + fakeToken, this);
+    copyText('setx ANTHROPIC_AUTH_TOKEN "' + fakeToken + '"', this);
   });
 
   /* --- IBAN --- */
