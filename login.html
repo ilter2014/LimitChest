@@ -29,7 +29,8 @@
 .auth-side h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin: .8rem 0 1rem; }
 .auth-side p  { color: var(--text-muted); max-width: 480px; }
 .auth-points  { list-style:none; margin-top:1.4rem; padding:0; font-size:.93rem; color:var(--text-soft); }
-.auth-points li { margin:.45rem 0; }
+.auth-points li { margin:.45rem 0; display:flex; align-items:center; gap:.5rem; }
+.auth-points svg { width:15px; height:15px; color:var(--amber-dark); flex-shrink:0; }
 
 .term-mini {
   background: var(--navy);
@@ -95,9 +96,9 @@
       <h1>Tekrar hoş geldin.</h1>
       <p>Paneline gir, API anahtarını al ve Claude Code'unu sınırsız kullanmaya devam et. Kota yok — sadece LimitChest.</p>
       <ul class="auth-points">
-        <li>Sınırsız token · tüm modeller</li>
-        <li>Anlık anahtar yönetimi</li>
-        <li>Türkçe destek, EFT / Havale</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Sınırsız token · tüm modeller</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Anlık anahtar yönetimi</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Türkçe destek, EFT / Havale</li>
       </ul>
       <div class="term-mini" style="margin-top:1.6rem;">
         <span class="term-prompt">$</span> limitchest auth --login
