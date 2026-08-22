@@ -13,6 +13,11 @@
 <script src="js/config.js"></script>
 <script src="js/app.js" defer></script>
 <style>
+.dash-icon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center;
+  justify-content:center; background:linear-gradient(135deg,#FFF3E4,#FFE9D2);
+  color:var(--amber-dark); margin-bottom:.9rem; }
+.dash-icon svg { width:21px; height:21px; }
+
 .dash-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.6rem; }
 .dash-card h3 { margin-bottom:.4rem; }
 .progress {
@@ -55,6 +60,7 @@
 
     <!-- Deneme / abonelik kartı -->
     <div class="card dash-card">
+      <div class="dash-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
       <h3>Durum</h3>
       <p id="status-text" style="color:var(--text-soft); margin-top:.5rem;">—</p>
       <div class="progress"><div id="trial-bar" class="progress-fill" style="width:0%"></div></div>
@@ -63,6 +69,7 @@
 
     <!-- API anahtarı / kurulum -->
     <div class="card dash-card">
+      <div class="dash-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15.5 7.5 2 2L8 19l-4 1 1-4Z"/><path d="m13 10 2 2"/></svg></div>
       <h3>Claude Code Bağlantısı</h3>
       <p style="color:var(--text-soft); font-size:.92rem; margin:.5rem 0 1rem;">
         Aşağıdaki ortam değişkenlerini ayarla ve <code>claude</code> komutunu çalıştır:
@@ -87,6 +94,7 @@
 
     <!-- Ödeme (IBAN) -->
     <div class="card dash-card">
+      <div class="dash-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></div>
       <h3>Abonelik / Ödeme</h3>
       <p style="color:var(--text-soft); font-size:.92rem; margin:.5rem 0 .9rem;">
         Aylık <strong>500 TL</strong> — sınırsız kullanım. EFT/Havale ile öde, bildirimi onaylayalım.
