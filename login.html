@@ -62,7 +62,7 @@
 .btn[disabled] { opacity:.65; cursor:not-allowed; transform:none !important; }
 
 @media (max-width: 900px) {
-  .auth-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .auth-grid { grid-template-columns: 1fr; gap:3.2rem; }
   .auth-side { text-align:center; }
   .auth-side p { margin: 0 auto; }
 }
@@ -82,7 +82,7 @@
       <a href="index.html#faq">Sık Sorulan</a>
       <a href="community.html">Topluluk</a>
       <a href="support.html">Destek</a>
-      <span id="nav-auth-area"><a href="login.html" class="nav-link-login">Giriş</a><a href="register.html" class="btn btn-primary btn-sm">Ücretsiz Dene</a></span>
+      <span id="nav-auth-area"><a href="register.html" class="btn btn-primary btn-sm">Giriş Yap</a></span>
     </div>
   </div>
 </nav>
@@ -109,9 +109,12 @@
 
     <!-- Sağ taraf: giriş kartı -->
     <div class="card auth-card">
-      <div class="terminal" style="padding:.6rem .9rem; margin-bottom:1.4rem;">
-        <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> ~/limitchest — login</div>
-        <div id="term-login"></div>
+      <div class="auth-cube-wrap" aria-hidden="true">
+        <div class="cube" style="width:160px; height:160px; top:0; left:50%; transform:translateX(-50%);">
+          <div class="face f-front"></div><div class="face f-back"></div>
+          <div class="face f-right"></div><div class="face f-left"></div>
+          <div class="face f-top"></div><div class="face f-bottom"></div>
+        </div>
       </div>
 
       <h1 style="font-size:1.7rem;">Giriş Yap</h1>
@@ -194,18 +197,17 @@
 (function () {
   const REDIRECT = 'dashboard.html';
 
-  /* ---------- Terminal yazım animasyonu ---------- */
-  const SCRIPT = [
+  /* ---------- Auth kub animasyonu ---------- */
+  const CUBE_SCRIPT = [
     { cmd: 'limitchest login', out: ['✦ Kimlik doğrulanıyor…'] },
-    { cmd: 'limitchest status', out: ['Plan: Sınırsız · Kota: ∞ · Model: Claude Sonnet 4'] },
-    { cmd: 'claude "Merhaba"', out: ['❯ Claude: Merhaba! Hoş geldin.'] }
+    { cmd: 'limitchest status', out: ['Plan: Sınırsız · Kota: ∞'] },
   ];
 
   function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  function runTerminal(id, script) {
+  // function runTerminal (kaldırıldı)(id, script) {
     const el = document.getElementById(id);
     if (!el) return;
     let si = 0, ci = 0;
@@ -285,7 +287,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', async function () {
-    runTerminal('term-login', SCRIPT);
+    
 
     const form     = document.getElementById('login-form');
     const emailEl  = document.getElementById('email');

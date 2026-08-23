@@ -19,7 +19,7 @@
   color:var(--amber-dark); margin-bottom:.9rem; }
 .dash-icon svg { width:21px; height:21px; }
 
-.dash-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.6rem; }
+.dash-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:2.8rem; }
 .dash-card h3 { margin-bottom:.4rem; }
 .progress {
   height:10px; background:var(--cream-dark); border-radius:var(--radius-full);
@@ -49,7 +49,7 @@
 </nav>
 
 <main class="container" style="padding:clamp(2rem,5vw,3.5rem) clamp(1.5rem,4vw,3rem);">
-  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2.2rem;">
     <div>
       <h1 id="greeting" style="font-size:1.8rem;">Hoş geldin…</h1>
       <p id="plan-line" style="color:var(--text-muted); margin-top:.3rem;">Yükleniyor…</p>
@@ -83,13 +83,13 @@
         <span id="token-box">ANTHROPIC_AUTH_TOKEN=sk-lc-…</span>
         <button id="token-copy">Kopyala</button>
       </div>
-      <div class="terminal" style="margin-top:1rem;">
-        <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> kurulum</div>
-        <div class="term-line"><span class="term-prompt">$</span> npm install -g @anthropic-ai/claude-code</div>
-        <div class="term-line"><span class="term-prompt">$</span> setx ANTHROPIC_BASE_URL "https://api.limitchest.com"</div>
-        <div class="term-line"><span class="term-prompt">$</span> setx ANTHROPIC_AUTH_TOKEN "sk-lc-****"</div>
-        <div class="term-line"><span class="term-prompt">$</span> claude</div>
-        <div class="term-line"><span class="term-prompt">❯</span> ✦ LimitChest üzerinden sınırsız erişim aktif</div>
+
+      <!-- KURULUM KOMUTLARI (bu bilgi amaçlı, UI operasyona göre güncellenir) -->
+      <div style="margin-top:1rem; padding:.9rem 1.1rem; background:var(--cream-dark); border-radius:10px; font-size:.82rem; line-height:1.9; color:var(--text-soft);">
+        <code style="color:var(--amber-dark);">npm install -g @anthropic-ai/claude-code</code><br>
+        <code style="color:var(--amber-dark);">setx ANTHROPIC_BASE_URL "https://api.limitchest.com"</code><br>
+        <code style="color:var(--amber-dark);">setx ANTHROPIC_AUTH_TOKEN "sk-lc-****"</code><br>
+        <code style="color:var(--amber-dark);">claude</code>
       </div>
     </div>
 
@@ -113,11 +113,23 @@
           <label for="amount">Tutar (TL)</label>
           <input type="number" id="amount" value="500" min="0" required>
         </div>
-        <div class="form-field">
-          <label for="note">Not (opsiyonel — dekont no vb.)</label>
-          <input type="text" id="note" placeholder="Örn: dekont 12345">
+
+        <!-- KRİTİK UYARI: Açıklamaya bu kodu girmelisiniz -->
+        <div style="background:rgba(244,162,97,.14); border:1px solid rgba(244,162,97,.4); border-radius:10px; padding:.9rem 1.1rem; margin:1.3rem 0 0 0;">
+          <strong style="color:var(--amber); font-size:.87rem;">⚠️ Ödeme eşleşmesi için kritik:</strong>
+          <ul style="margin:0.45rem 0 0 1.6rem; padding:0; font-size:.82rem; color:var(--text-soft); line-height:1.7;">
+            <li>Ödeme açıklamasına admin panelinden alacağınız tanımlı kodu mutlaka girmelisiniz.</li>
+            <li>Her kullanıcı için benzersiz bir kod üretilir.</li>
+            <li>Kodu girmeden ödeme onaylanmaz.</li>
+          </ul>
         </div>
-        <button type="submit" id="pay-btn" class="btn btn-primary" style="width:100%;">Ödeme Yaptım — Bildir</button>
+
+        <div class="form-field">
+          <label for="note" style="color:var(--amber-dark); font-weight:600;">Ödeme Kodu (zorunlu — açıklamaya ekle)</label>
+          <input type="text" id="note" placeholder="Örn: LC-7XYZ12" required style="border-color:var(--amber);">
+        </div>
+
+        <button type="submit" id="pay-btn" class="btn btn-primary" style="width:100%;">Ödememi Bildir</button>
       </form>
       <div id="pay-msg" style="margin-top:.7rem;"></div>
     </div>
@@ -237,17 +249,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btn = document.getElementById('pay-btn');
     btn.disabled = true; btn.textContent = 'Gönderiliyor…';
 
+    const note = document.getElementById('note').value.trim();
+
+    // KRİTİK: Ödeme kodu zorunlu ve farklı veritabanında saklanacak
+    const supportRef = note.startsWith('LC-') ? note : ('LC-' + profile.id.replace(/-/g, '').slice(0, 12).toUpperCase());
+
     const { error } = await sb.from('payment_notifications').insert({
       user_id: profile.id,
       amount: parseFloat(document.getElementById('amount').value) || 500,
-      note: document.getElementById('note').value.trim() || null
+      note: supportRef // Bu değer iban açıklaması olarak raporlanacak
     });
 
-    btn.disabled = false; btn.textContent = 'Ödeme Yaptım — Bildir';
-    msgEl.innerHTML = error
-      ? '<div class="form-error">' + error.message + '</div>'
-      : '<div class="form-success">✅ Bildirim alındı! Onaylandığında aboneliğin aktif olacak.</div>';
-    if (!error) document.getElementById('pay-form').reset();
+    btn.disabled = false; btn.textContent = 'Ödememi Bildir';
+
+    if (error) {
+      msgEl.innerHTML = '<div class="form-error">' + error.message + '</div>';
+    } else {
+      msgEl.innerHTML = `
+        <div class="form-success">
+          ✅ Bildirim alındı!
+          <p style="font-size:.82rem; margin-top:.5rem; color:var(--text-muted);">
+            İban açıklamanıza şu kodu ekleyin: <strong style="color:var(--amber);">${supportRef}</strong>
+          </p>
+        </div>
+      `;
+    }
+
+    if (!error) {
+      document.getElementById('pay-form').reset();
+      // 5 saniye sonra başarı mesajını temizle
+      setTimeout(() => msgEl.innerHTML = '', 5000);
+    }
   });
 
   /* --- Destek taleplerim --- */

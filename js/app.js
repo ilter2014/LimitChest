@@ -114,7 +114,57 @@ async function renderNavAuth() {
 getSession().then(renderNavAuth);
 sb.auth.onAuthStateChange((_e, s) => { _session = s; renderNavAuth(); });
 
-/* ---------- Reveal animasyonu (data-delay) ---------- */
+/* ---------- Reveal animasyonu (data-reveal: .from-left/.from-right/.from-top) ---------- */
+function initReveal() {
+  const els = document.querySelectorAll('[data-reveal]');
+  if (!els.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const d = parseInt(en.target.dataset.delay || '0');
+        setTimeout(() => en.target.classList.add('revealed'), d);
+        obs.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.11 });
+  els.forEach(el => {
+    const dir = el.dataset.revealDir;
+    if (dir) el.classList.add(dir);
+    obs.observe(el);
+  });
+}
+
+/* ---------- Scroll parallax (3D küp + ışık küreleri) ---------- */
+function initParallax() {
+  const scene   = document.querySelector('.parallax-scene');
+  const cubes   = scene ? scene.querySelectorAll('.cube') : [];
+  const lights  = scene ? scene.querySelectorAll('.light-blob') : [];
+  if (!cubes.length) return;
+
+  const throttle = (fn, ms) => { let w=false; return ()=>{ if(!w){ fn(); w=true; setTimeout(()=>w=false,ms);} }; };
+  const onScroll = throttle(() => {
+    const y = window.scrollY || window.pageYOffset;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = docH ? y / docH : 0;
+    // Küp pozisyonu: hero kenarlardan içe doğru kayar
+    cubes.forEach((c, i) => {
+      const x = -60 + ratio * 120 + (i - (cubes.length-1)/2) * 40;
+      c.style.transform = `translate3d(${x}px, ${ratio * -40}px, 0)`;
+    });
+    // Işık küreleri
+    lights.forEach((l, i) => {
+      const dx = -80 + ratio * 160 + i * 60;
+      const dy = 60 - ratio * 80;
+      l.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+    });
+    // Sayfa kaydıkça sahneyi yumuşakça gizle / göster
+    scene.classList.toggle('parallax-scene--hidden', y > window.innerHeight * 1.5);
+  }, 16);
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Mobil menü: linke tıklanınca menüyü kapat
   document.querySelectorAll('.nav-links a').forEach(a =>
@@ -126,15 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
     nav?.classList.toggle('scrolled', window.scrollY > 10);
   }, { passive: true });
 
-  const els = document.querySelectorAll('[data-delay]');
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(en => {
-      if (en.isIntersecting) {
-        setTimeout(() => en.target.classList.add('visible'),
-          parseInt(en.target.dataset.delay || 0));
-        obs.unobserve(en.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  els.forEach(el => obs.observe(el));
+  initReveal();
+  initParallax();
 });

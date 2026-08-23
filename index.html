@@ -32,16 +32,16 @@
 .hero h1 em { font-style:normal; color:var(--amber); }
 .hero-sub { font-size:1.08rem; color:#C9C4DC; max-width:540px; line-height:1.75; }
 .cta-row { display:flex; gap:.9rem; flex-wrap:wrap; margin-top:2rem; }
-.trust-row { display:flex; gap:1.4rem; flex-wrap:wrap; margin-top:1.6rem;
+.trust-row { display:flex; gap:2.6rem; flex-wrap:wrap; margin-top:1.6rem;
   font-size:.86rem; color:#9B94B8; }
 .trust-row span { display:inline-flex; align-items:center; gap:.45rem; }
 .trust-row span + span { padding-left:1.4rem; border-left:1px solid rgba(255,255,255,.14); }
 .trust-row svg { width:15px; height:15px; color:var(--amber); }
 
 .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
-  gap:1.8rem; margin-top:2.8rem; }
+  gap:3.0rem; margin-top:2.8rem; }
 .feature-card { background:var(--white); border:1px solid var(--border);
-  border-radius:var(--radius-lg); padding:1.8rem; transition:.25s var(--ease-out); }
+  border-radius:var(--radius-lg); padding:2.4rem 2rem; transition:.25s var(--ease-out); }
 .feature-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); border-color:rgba(244,162,97,.35); }
 .icon-tile { width:46px; height:46px; border-radius:12px; display:flex;
   align-items:center; justify-content:center; background:linear-gradient(135deg,#FFF3E4,#FFE9D2);
@@ -49,20 +49,20 @@
 .icon-tile svg { width:23px; height:23px; }
 
 .pricing-card { max-width:480px; margin:2.6rem auto 0; background:var(--white);
-  border:1px solid rgba(244,162,97,.35); border-radius:24px; padding:2.6rem clamp(1.5rem,4vw,2.6rem);
+  border:1px solid rgba(244,162,97,.35); border-radius:24px; padding:3.2rem clamp(1.5rem,4vw,2.6rem);
   box-shadow:0 20px 60px rgba(244,162,97,.14); position:relative; overflow:hidden; }
 .pricing-card::before { content:""; position:absolute; top:0; left:0; right:0; height:4px;
   background:linear-gradient(90deg,var(--amber),var(--amber-light)); }
 .price-line { display:flex; align-items:baseline; gap:.5rem; margin:.9rem 0 .3rem; }
 .price-value { font-family:'Playfair Display',serif; font-size:3.2rem; font-weight:700; color:var(--navy); line-height:1; }
 .price-period { color:var(--text-muted); font-size:1rem; }
-.check-list { list-style:none; padding:1.4rem 0 1.6rem; margin:0; }
+.check-list { list-style:none; padding:2.0rem 2rem0 1.6rem; margin:0; }
 .check-list li { display:flex; align-items:flex-start; gap:.7rem; padding:.42rem 0;
   font-size:.95rem; color:var(--text-soft); }
 .check-list svg { width:18px; height:18px; flex-shrink:0; color:var(--amber-dark); margin-top:.15rem; }
 
 .steps { display:grid; gap:0; margin-top:2.4rem; max-width:720px; }
-.step { display:flex; gap:1.3rem; position:relative; padding-bottom:1.9rem; }
+.step { display:flex; gap:2.5rem; position:relative; padding-bottom:1.9rem; }
 .step:last-child { padding-bottom:0; }
 .step:not(:last-child)::before { content:""; position:absolute; left:21px; top:46px; bottom:6px;
   width:2px; background:linear-gradient(var(--amber-light),transparent); }
@@ -76,8 +76,8 @@
 .faq-item { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09);
   border-radius:var(--radius-md); overflow:hidden; transition:border-color .2s; }
 .faq-item[open] { border-color:rgba(244,162,97,.4); }
-.faq-item summary { cursor:pointer; padding:1.1rem 1.4rem; font-weight:600; list-style:none;
-  display:flex; justify-content:space-between; align-items:center; gap:1rem; color:#F0EDF8; }
+.faq-item summary { cursor:pointer; padding:1.7rem 1.4rem; font-weight:600; list-style:none;
+  display:flex; justify-content:space-between; align-items:center; gap:2.2rem; color:#F0EDF8; }
 .faq-item summary::-webkit-details-marker { display:none; }
 .faq-item summary::after { content:"+"; font-family:'JetBrains Mono',monospace;
   color:var(--amber); font-size:1.25rem; transition:transform .2s; }
@@ -88,6 +88,22 @@
 </style>
 </head>
 <body>
+
+<!-- ARKA PLAN PARALLAX SAHNE -->
+<div class="parallax-scene" aria-hidden="true">
+  <div class="light-blob" style="top:8%; left:6%;"></div>
+  <div class="light-blob" style="top:62%; left:82%;"></div>
+  <div class="cube" style="top:18%; left:74%; width:200px; height:200px;">
+    <div class="face f-front"></div><div class="face f-back"></div>
+    <div class="face f-right"></div><div class="face f-left"></div>
+    <div class="face f-top"></div><div class="face f-bottom"></div>
+  </div>
+  <div class="cube x-right" style="top:60%; left:8%; width:140px; height:140px;">
+    <div class="face f-front"></div><div class="face f-back"></div>
+    <div class="face f-right"></div><div class="face f-left"></div>
+    <div class="face f-top"></div><div class="face f-bottom"></div>
+  </div>
+</div>
 
 <!-- NAVBAR -->
 <nav class="navbar">
@@ -100,7 +116,7 @@
       <a href="#install">Nasıl Başlarım</a>
       <a href="community.html">Topluluk</a>
       <a href="support.html">Destek</a>
-      <span id="nav-auth-area"><a href="login.html" class="nav-link-login">Giriş</a><a href="register.html" class="btn btn-primary btn-sm">Ücretsiz Dene</a></span>
+      <span id="nav-auth-area"></span>
     </div>
   </div>
 </nav>
@@ -127,13 +143,16 @@
         </div>
       </div>
 
-      <!-- Terminal -->
-      <div class="terminal" aria-hidden="true">
-        <div class="term-bar">
-          <span class="term-dots"><span></span><span></span><span></span></span>
-          <span>~/projem — claude</span>
+      <div data-reveal class="hero-viz" style="position:relative; height:340px; display:flex; align-items:center; justify-content:center;">
+        <div style="position:relative; z-index:1; text-align:center;">
+          <div style="display:inline-flex; gap:.7rem; flex-wrap:wrap; justify-content:center;">
+            <span style="display:inline-flex; align-items:center; gap:.4rem; background:rgba(244,162,97,.14); color:var(--amber); padding:.55rem 1rem; border-radius:12px; font-size:.88rem; font-weight:600;">∞ Kotasız</span>
+            <span style="display:inline-flex; align-items:center; gap:.4rem; background:rgba(244,162,97,.14); color:var(--amber); padding:.55rem 1rem; border-radius:12px; font-size:.88rem; font-weight:600;">⚡ Anında Aktif</span>
+          </div>
+          <p style="color:#B8B2CC; font-size:.95rem; margin-top:1.3rem; max-width:300px; line-height:1.7;">
+            3 gün boyunca sınırsız kullan. Dene, beğenirsen devam et — kart derdi yok.
+          </p>
         </div>
-        <div id="term-demo"></div>
       </div>
     </div>
   </div>
@@ -245,9 +264,7 @@
         <div class="step-body">
           <strong>Claude Code'a bağlayın</strong>
           <p>Windows'ta CMD'yi (veya PowerShell'i) açın, iki komutu girin — gerisi hazır:</p>
-          <div class="terminal" style="margin-top:.9rem;">
-            <div class="term-bar"><span class="term-dots"><span></span><span></span><span></span></span> terminal</div>
-            <div id="term-install"></div>
+          <div id="term-install"></div>
           </div>
         </div>
       </div>
@@ -348,7 +365,7 @@
     ]
   };
 
-  function runTerminal(id, script) {
+  // function runTerminal (kaldırıldı)(id, script) {
     const el = document.getElementById(id);
     if (!el || !script) return;
     let si = 0, ci = 0;
@@ -374,8 +391,8 @@
   }
 
   function start() {
-    runTerminal('term-demo', SCRIPTS.hero);
-    runTerminal('term-install', SCRIPTS.install);
+    
+    
   }
   if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', start);
   else start();

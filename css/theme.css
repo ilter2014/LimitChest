@@ -421,6 +421,64 @@ footer a:hover { color:var(--amber); }
   .icon-tile { width:40px; height:40px; }
 }
 /* Hareket duyarlılığı olan kullanıcılar için animasyonları kıs */
+/* ============ SCROLL PARALLAX + 3D KÜP ============ */
+.parallax-scene {
+  position:fixed; inset:0; pointer-events:none;
+  z-index:0; overflow:hidden;
+}
+.parallax-scene--hidden { display:none; }
+
+/* 3D küp — CSS dönüşüm, JS sadece scroll offsetini besler */
+.cube {
+  position:absolute;
+  width:240px; height:240px;
+  top:50%; left:50%;
+  transform-style:preserve-3d;
+  animation:cubeRotate 24s infinite linear;
+}
+.cube.x-right { animation-duration:30s; }
+.cube.face {
+  position:absolute; inset:0;
+  border:1px solid var(--amber);
+  border-radius:10px;
+  box-shadow:0 0 30px rgba(244,162,97,.18);
+}
+.cube .f-front  { transform:rotateY(  0deg) translateZ(120px); }
+.cube .f-back  { transform:rotateY(180deg) translateZ(120px); }
+.cube .f-right { transform:rotateY( 90deg) translateZ(120px); }
+.cube .f-left  { transform:rotateY(-90deg) translateZ(120px); }
+.cube .f-top   { transform:rotateX( 90deg) translateZ(120px); }
+.cube .f-bottom{ transform:rotateX(-90deg) translateZ(120px); }
+@keyframes cubeRotate {
+  0%   { transform:rotateX(0) rotateY(0); }
+  100% { transform:rotateX(360deg) rotateY(360deg); }
+}
+
+/* Işık küreleri — parallax daireleri */
+.light-blob {
+  position:absolute;
+  width:220px; height:220px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(244,162,97,.14), transparent 70%);
+  filter:blur(30px);
+}
+
+/* Reveal: soldan / sağdan / yukarıdan */
+[data-reveal] {
+  opacity:0; transform:translateY(24px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity:1; transform:none; transition:none; }
+}
+[data-reveal].revealed { opacity:1; transform:none; }
+[data-reveal].from-left  { transform:translateX(-36px); }
+[data-reveal].from-right { transform:translateX( 36px); }
+[data-reveal].from-top   { transform:translateY(-24px); }
+
+/* Auth kartı içinde küp */
+.auth-cube-wrap { position:relative; height:160px; margin-bottom:1.3rem; }
+
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration:.01ms !important; transition-duration:.01ms !important; }
   html { scroll-behavior:auto; }
